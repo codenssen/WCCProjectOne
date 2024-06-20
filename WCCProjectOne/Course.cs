@@ -5,9 +5,6 @@ namespace WCCProjectOne
     {
         private int _id;
         private string _name;
-        private int[] _grades;
-        private int[] _studendId;
-        private string[] _appreciations;
 
         private static int _indexId = 1;
 
@@ -15,10 +12,11 @@ namespace WCCProjectOne
         {
             _id = _indexId++;
             _name = name;
-            _grades = new int[100];
-            _appreciations = new string[100];
-            _studendId = new int[100];
         }
+
+        public int Id { get { return _id; } }
+
+        public string Name { get { return _name; } }
 
     }
 }
