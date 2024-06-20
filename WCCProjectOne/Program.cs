@@ -1,12 +1,14 @@
-﻿using WCCProjectOne;
+﻿
 
-namespace ProjectOne
+namespace WCCProjectOne
 {
     internal class Program
     {
         static void Main(string[] args)
         {
             int userInput;
+
+            // Mockup students
             List<Student> students = new List<Student>
             {
                 new Student("ABRASSART", "Aurélien", new DateOnly(1982, 07, 27)),
@@ -21,6 +23,7 @@ namespace ProjectOne
 
             while (true)
             {
+                // Menu Accueil
                 userInput = Home();
 
                 if (userInput == 0)
@@ -29,6 +32,11 @@ namespace ProjectOne
                 }
                 else if (userInput == 1)
                 {
+                    // <<< Sous-menu Elève >>>
+                    // "1 - Lister les élèves"
+                    // "2 - Créer un nouvel élève"
+                    // "3 - Consulter un élève existant"
+                    // "0 - Revenir au menu principal"
                     userInput = StudentMenu();
 
                     if (userInput == 0)
@@ -50,7 +58,11 @@ namespace ProjectOne
                     {
                         Console.Clear();
                         AddStudent(students);
-
+                        continue;
+                    }
+                    if (userInput == 3)
+                    {
+                        PrintStudent(students);
                         continue;
                     }
 
@@ -99,11 +111,12 @@ namespace ProjectOne
         }
         static void AddStudent(List<Student> students)
         {
-            string lastName = "";
-            string firstName = "";
+            string lastName;
+            string firstName;
             int year;
             int month;
             int day;
+
             Console.WriteLine(">> Création d'un nouvel élève <<");
             Console.WriteLine("Saisir le nom de l'élève :");
             lastName = Console.ReadLine().ToString();
@@ -117,6 +130,30 @@ namespace ProjectOne
             Console.WriteLine("Année de naissance (Exemple : 1994) :");
             year = Convert.ToInt32(Console.ReadLine());
             students.Add(new Student(lastName, firstName, new DateOnly(year, month, day)));
+        }
+        static void PrintStudent(List<Student> students)
+        {
+            int userInput;
+
+            Console.Clear();
+            Console.WriteLine("Voici la liste des élèves :");
+            Console.WriteLine("Choisir l'élève a afficher en tapant son ID");
+            foreach (Student student in students)
+            {
+                Console.WriteLine($"ID : {student.Id} - Nom : {student.LastName}");
+            }
+            Console.WriteLine("Choix :");
+            userInput = Convert.ToInt32(Console.ReadLine());
+            IEnumerable<Student> printedStudent = students.Where(student => student.Id == userInput);
+            Console.WriteLine("==========================================");
+            foreach (Student student in printedStudent)
+            {
+                student.ListOne();
+                Console.WriteLine("==========================================");
+            }
+            Console.WriteLine("Taper une touche pour revenir au menu principal");
+            Console.ReadKey(true);
+
         }
 
 

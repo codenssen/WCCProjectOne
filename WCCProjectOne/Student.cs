@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProjectOne
+﻿
+namespace WCCProjectOne
 {
     public class Student
     {
-        private int _id { get; }
+        private int _id;
         private string _lastName;
         private string _firstName;
         private DateOnly _birthDate;
@@ -24,13 +19,22 @@ namespace ProjectOne
   
         }
 
+        public int Id { get { return _id; } }
+
+        public string LastName { get { return _lastName; } }
+
+        public string FirstName { get { return _firstName; } }
+
+        public DateOnly BirthDate { get { return _birthDate; } }
+
         public void ListOne()
         {
             Console.WriteLine($"ID : {_id}");
             Console.WriteLine($"Nom : {_lastName}");
-            Console.WriteLine($"Prénomn : {_firstName}");
-            Console.WriteLine($"Date de naissence {_birthDate}");
+            Console.WriteLine($"Prénom : {_firstName}");
+            Console.WriteLine($"Date de naissance : {_birthDate}");
         }
+
 
 
     }
