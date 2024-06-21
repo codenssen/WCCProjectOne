@@ -3,68 +3,50 @@ namespace WCCProjectOne
 {
     public class Student
     {
-        private int _id;
-        private string _lastName;
-        private string _firstName;
         private DateOnly _birthDate;
 
-        private string[] _appreciations;
-        private double[] _grades;
-        private int[] _courseId;
+        public readonly int Id;
+        public readonly string LastName;
+        public readonly string FirstName;
+
+        public string BirthDate { get { return _birthDate.ToString(); } }
+
+        private List<Note> _notes;
 
         private static int _indexId = 1;
 
-        // Must be start 0
+        // Must start at 0
         private static int _indexGrade = 0;
 
         public Student(string lastName, string firstName, DateOnly birthDate)
         {
-            _id = _indexId++;
-            _lastName = lastName;
-            _firstName = firstName;
+            Id = _indexId++;
+            LastName = lastName;
+            FirstName = firstName;
             _birthDate = birthDate;
 
-            _grades = new double[50];
-            _courseId = new int[50];
-            _appreciations = new string[50];
+            _notes = new List<Note>();
         }
 
-        public int Id { get { return _id; } }
 
-        public string LastName { get { return _lastName; } }
-
-        public string FirstName { get { return _firstName; } }
-
-        public DateOnly BirthDate { get { return _birthDate; } }
-
-        public void AddGrade(int courseId, string appreciation, double grade)
+        public void AddGrade(double grade, string appreciation, int courseId)
         {
-            _grades[_indexGrade] = grade;
-            _appreciations[_indexGrade] = appreciation;
-            _courseId[_indexGrade] = courseId;
-            _indexGrade++;
+            _notes.Add(new Note(grade, appreciation, courseId));
         }
         public void PrintStudentGrades()
         {
-            for (int i = 0; i < _grades.Length && _courseId[i] != 0; i++)
+            foreach (Note note in _notes)
             {
-                Console.WriteLine($"Note : {_grades[i]}");
-                Console.WriteLine($"Appréciation : {_appreciations[i]}");
-                Console.WriteLine($"Matière : {_courseId[i]}");
-
+                note.PrintNote();
             }
         }
 
         public void ListOne()
         {
-            Console.WriteLine($"ID : {_id}");
-            Console.WriteLine($"Nom : {_lastName}");
-            Console.WriteLine($"Prénom : {_firstName}");
+            Console.WriteLine($"ID : {Id}");
+            Console.WriteLine($"Nom : {LastName}");
+            Console.WriteLine($"Prénom : {FirstName}");
             Console.WriteLine($"Date de naissance : {_birthDate}");
         }
-
-
-
     }
-
 }
