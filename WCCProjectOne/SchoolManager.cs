@@ -1,10 +1,22 @@
 ﻿
 
+using Newtonsoft.Json;
+
 namespace WCCProjectOne
 {
     public class SchoolManager
     {
-        public void Run(List<Student> students, List<Course> courses)
+
+        private List<Student> _students;
+        private List<Course> _courses;
+
+        public SchoolManager()
+        {
+            _students = LoadData<List<Student>>("students.json") ?? new List<Student>();
+            _courses = LoadData<List<Course>>("courses.json") ?? new List<Course>();
+        }
+
+        public void Run()
         {
 
             int userInput;
@@ -38,24 +50,25 @@ namespace WCCProjectOne
                     if (userInput == 1)
                     {
                         Console.Clear();
-                        menu.ListStudents(students);
+                        menu.ListStudents(_students);
                         Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal ");
                         Console.ReadKey(true);
                     }
                     if (userInput == 2)
                     {
                         Console.Clear();
-                        menu.AddStudent(students);
+                        menu.AddStudent(_students);
+                        SaveData(_students, "students.json");
                         continue;
                     }
                     if (userInput == 3)
                     {
-                        menu.PrintStudent(students);
+                        menu.PrintStudent(_students);
                         continue;
                     }
                     if (userInput == 4)
                     {
-                        menu.AddGrade(students);
+                        menu.AddGrade(_students);
                         Console.ReadKey(true);
                         continue;
                     }
@@ -75,7 +88,7 @@ namespace WCCProjectOne
                     if (userInput == 1)
                     {
                         Console.Clear();
-                        menu.listCourses(courses);
+                        menu.listCourses(_courses);
                         Console.ReadKey(true);
                         continue;
 
@@ -83,13 +96,13 @@ namespace WCCProjectOne
                     if (userInput == 2)
                     {
                         Console.Clear();
-                        menu.AddCourse(courses);
+                        menu.AddCourse(_courses);
                         continue;
                     }
                     if (userInput == 3)
                     {
                         Console.Clear();
-                        menu.DeleteCourse(courses);
+                        menu.DeleteCourse(_courses);
                         continue;
                     }
                     else
@@ -98,6 +111,36 @@ namespace WCCProjectOne
                     }
                 }
             }
+        }
+
+        private void SaveData<T>(T data, string filePath)
+        {
+            try
+            {
+                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving data: " + ex.Message);
+            }
+        }
+
+        private T LoadData<T>(string filePath)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    string json = File.ReadAllText(filePath);
+                    return JsonConvert.DeserializeObject<T>(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error loading data: " + ex.Message);
+            }
+            return default(T);
         }
 
     }
