@@ -7,9 +7,9 @@
         {
             int userInput;
             Console.Clear();
-            Console.WriteLine("/=/ Bienvenue dans votre application de gestion Eleve/Cours /=/");
+            Console.WriteLine("/=/ Bienvenue dans votre application de gestion Eleves/Cours /=/");
             Console.WriteLine("");
-            Console.WriteLine("Faite votre choix :");
+            Console.WriteLine("Faites votre choix :");
             Console.WriteLine("1 - Gestion des élèves");
             Console.WriteLine("2 - Gestion des cours");
             Console.WriteLine("9 - Quitter l'application");
@@ -27,7 +27,7 @@
             catch (FormatException ex)
             {
                 Console.WriteLine("====================/!\\=====================");
-                Console.WriteLine("|  Erreur  ! Merci de renter un chiffre !  |");
+                Console.WriteLine("|  Erreur  ! Merci de rentrer un chiffre !  |");
                 Console.WriteLine("============================================");
                 Console.ReadKey(true);
                 return 0;
@@ -53,7 +53,7 @@
             catch (FormatException ex)
             {
                 Console.WriteLine("=======================/!\\========================");
-                Console.WriteLine("|  Erreur  ! Merci de renter un texte correct !  |");
+                Console.WriteLine("|  Erreur  ! Merci de rentrer un texte correct !  |");
                 Console.WriteLine("==================================================");
                 Console.ReadKey(true);
                 return "";
@@ -77,7 +77,7 @@
             int userInput;
             Console.Clear();
             Console.WriteLine(">> Gestion des élèves <<");
-            Console.WriteLine("Faite votre choix :");
+            Console.WriteLine("Faites votre choix :");
             Console.WriteLine("1 - Lister les élèves");
             Console.WriteLine("2 - Créer un nouvel élève");
             Console.WriteLine("3 - Consulter un élève existant");
@@ -91,7 +91,7 @@
             int userInput;
             Console.Clear();
             Console.WriteLine(">> Gestion des cours <<");
-            Console.WriteLine("Faite votre choix :");
+            Console.WriteLine("Faites votre choix :");
             Console.WriteLine("1 - Lister les cours existants");
             Console.WriteLine("2 - Ajouter un nouveau cours au programme");
             Console.WriteLine("3 - Supprimer un cours");
@@ -126,7 +126,7 @@
 
             Console.Clear();
             Console.WriteLine("Voici la liste des élèves :");
-            Console.WriteLine("Choisir l'élève a afficher en tapant son ID");
+            Console.WriteLine("Choisir l'élève à afficher en tapant son identifiant");
             foreach (Student student in students)
             {
                 Console.WriteLine($"ID : {student.Id} - Nom : {student.LastName}");
@@ -194,13 +194,13 @@
                 lastName = UserStringInput();
                 if (string.IsNullOrWhiteSpace(lastName))
                 {
-                    lastName = "Aucun Nom fourni";
+                    lastName = "Aucun nom fourni";
                 }
                 Console.WriteLine("Saisir le prénom de l'élève :");
                 firstName = UserStringInput();
                 if (string.IsNullOrWhiteSpace(firstName))
                 {
-                    firstName = "Aucune Prénom fourni";
+                    firstName = "Aucune prénom fourni";
                 }
                 Console.WriteLine("Saisir la date de naissance de l'élève :");
                 Console.WriteLine("Jour de naissance :");
@@ -242,7 +242,7 @@
             name = UserStringInput();
             if (string.IsNullOrWhiteSpace(name))
             {
-                name = "Aucun nom fourni.";
+                name = "Aucun nom de cours fourni.";
             }
             courses.Add(new Course(name));
         }
