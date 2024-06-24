@@ -39,7 +39,7 @@ namespace WCCProjectOne
                     {
                         Console.Clear();
                         menu.ListStudents(students);
-                        Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
+                        Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal ");
                         Console.ReadKey(true);
                     }
                     if (userInput == 2)
