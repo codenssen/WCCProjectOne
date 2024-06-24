@@ -14,8 +14,11 @@ namespace WCCProjectOne
             {
                 // Menu Accueil
                 userInput = menu.Home();
-
                 if (userInput == 0)
+                {
+                    continue;
+                }
+                if (userInput == 9)
                 {
                     break;
                 }
@@ -36,6 +39,7 @@ namespace WCCProjectOne
                     {
                         Console.Clear();
                         menu.ListStudents(students);
+                        Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
                         Console.ReadKey(true);
                     }
                     if (userInput == 2)

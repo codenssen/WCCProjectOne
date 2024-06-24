@@ -7,14 +7,69 @@
         {
             int userInput;
             Console.Clear();
-            Console.WriteLine("/+==+/ Bienvenue dans votre application de gestion Eleve/Cours /+==+/");
+            Console.WriteLine("/=/ Bienvenue dans votre application de gestion Eleve/Cours /=/");
             Console.WriteLine("");
             Console.WriteLine("Faite votre choix :");
             Console.WriteLine("1 - Gestion des élèves");
             Console.WriteLine("2 - Gestion des cours");
-            Console.WriteLine("0 - Quitter l'application");
-            userInput = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("9 - Quitter l'application");
+            userInput = UserInput();
             return userInput;
+        }
+
+        public int UserInput()
+        {
+            int userInput;
+            try
+            {
+                userInput = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("====================/!\\=====================");
+                Console.WriteLine("|  Erreur  ! Merci de renter un chiffre !  |");
+                Console.WriteLine("============================================");
+                Console.ReadKey(true);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur ! {ex.Message}");
+                Console.WriteLine("Appuyez sur une touche pour continuer");
+                Console.ReadKey(true);
+                return 0;
+            }
+
+            return userInput;
+        }
+        
+        public string UserStringInput()
+        {
+            string userStringInput;
+            try
+            {
+                userStringInput = Console.ReadLine()!;
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("=======================/!\\========================");
+                Console.WriteLine("|  Erreur  ! Merci de renter un texte correct !  |");
+                Console.WriteLine("==================================================");
+                Console.ReadKey(true);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur ! {ex.Message}");
+                Console.WriteLine("Appuyez sur une touche pour continuer");
+                Console.ReadKey(true);
+                return "";
+            }
+            if (string.IsNullOrWhiteSpace(userStringInput))
+            {
+                userStringInput = "";
+            }
+            return userStringInput;
         }
 
         public int Student()
@@ -28,7 +83,7 @@
             Console.WriteLine("3 - Consulter un élève existant");
             Console.WriteLine("4 - Ajouter une note à un élève");
             Console.WriteLine("0 - Revenir au menu principal");
-            userInput = Convert.ToInt32(Console.ReadLine());
+            userInput = UserInput();
             return userInput;
         }
         public int Course()
@@ -41,25 +96,27 @@
             Console.WriteLine("2 - Ajouter un nouveau cours au programme");
             Console.WriteLine("3 - Supprimer un cours");
             Console.WriteLine("0 - Revenir au menu principal");
-            userInput = Convert.ToInt32(Console.ReadLine());
+            userInput = UserInput();
             return userInput;
         }
         public void ListStudents(List<Student> students)
         {
             Console.WriteLine(">> Liste des elèves : <<");
+            int index = 1;
             foreach (Student student in students)
             {
-                Console.WriteLine($"{student.Id} - {student.LastName}");
-
+                Console.WriteLine($"{index} - {student.LastName} - {student.FirstName}");
+                index++;
             }
 
         }
         public void listCourses(List<Course> courses)
         {
+            int index = 1;
             foreach (Course course in courses)
             {
-                Console.WriteLine($"ID : {course.Id} - {course.Name}");
-
+                Console.WriteLine($"{index} - {course.Name}");
+                index++;
             }
         }
 
@@ -75,7 +132,7 @@
                 Console.WriteLine($"ID : {student.Id} - Nom : {student.LastName}");
             }
             Console.WriteLine("Choix :");
-            userInput = Convert.ToInt32(Console.ReadLine());
+            userInput = UserInput();
             IEnumerable<Student> printedStudent = students.Where(student => student.Id == userInput);
             Console.WriteLine("==========================================");
             foreach (Student student in printedStudent)
@@ -94,23 +151,27 @@
             int studentId;
             int courseId;
             int grade;
-            string appreciation;
+            string? appreciation;
             foreach (Student student in students)
             {
                 Console.WriteLine($"{student.Id} - {student.LastName}");
             }
             Console.WriteLine("Choix de l'élève ?");
-            studentId = Convert.ToInt32(Console.ReadLine());
+            studentId = UserInput();
             //foreach (Course course in courses)
             //{
             //    Console.WriteLine($"{course.Id} - {course.Name}");
             //}
             Console.WriteLine("Choix du cours ?");
-            courseId = Convert.ToInt32(Console.ReadLine());
+            courseId = UserInput();
             Console.WriteLine("Merci de rentrer votre note (entre 0 et 20)");
-            grade = Convert.ToInt32(Console.ReadLine());
+            grade = UserInput();
             Console.WriteLine("Merci de rentrer votre appréciation (ou laisser vide)");
-            appreciation = Console.ReadLine();
+            appreciation = UserStringInput();
+            if (string.IsNullOrWhiteSpace(appreciation))
+            {
+                appreciation = "Aucune appréciation fournie.";
+            }
             var query = students.Where(student => student.Id == studentId);
             foreach (Student student in query)
             {
@@ -120,24 +181,57 @@
         }
         public void AddStudent(List<Student> students)
         {
-            string lastName;
-            string firstName;
+            string? lastName;
+            string? firstName;
             int year;
             int month;
             int day;
 
-            Console.WriteLine(">> Création d'un nouvel élève <<");
-            Console.WriteLine("Saisir le nom de l'élève :");
-            lastName = Console.ReadLine().ToString();
-            Console.WriteLine("Saisir le prénom de l'élève :");
-            firstName = Console.ReadLine().ToString();
-            Console.WriteLine("Saisir la date de naissance de l'élève :");
-            Console.WriteLine("Jour de naissance :");
-            day = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Mois de naissance (Exemple : 07 pour Juillet) :");
-            month = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Année de naissance (Exemple : 1994) :");
-            year = Convert.ToInt32(Console.ReadLine());
+            while (true)
+            {
+                Console.WriteLine(">> Création d'un nouvel élève <<");
+                Console.WriteLine("Saisir le nom de l'élève :");
+                lastName = UserStringInput();
+                if (string.IsNullOrWhiteSpace(lastName))
+                {
+                    lastName = "Aucun Nom fourni";
+                }
+                Console.WriteLine("Saisir le prénom de l'élève :");
+                firstName = UserStringInput();
+                if (string.IsNullOrWhiteSpace(firstName))
+                {
+                    firstName = "Aucune Prénom fourni";
+                }
+                Console.WriteLine("Saisir la date de naissance de l'élève :");
+                Console.WriteLine("Jour de naissance :");
+                day = UserInput();
+                if (day <= 0 || day > 31)
+                {
+                    Console.WriteLine("Erreur ! Le jour n'est pas valide. Appuyez sur une touche pour recommencer");
+                    Console.ReadKey(true);
+                    Console.Clear();
+                    continue;
+                }
+                Console.WriteLine("Mois de naissance (Exemple : 07 pour Juillet) :");
+                month = UserInput();
+                if (month <= 0 || month > 12)
+                {
+                    Console.WriteLine("Erreur ! Le mois n'est pas valide. Appuyez sur une touche pour recommencer");
+                    Console.ReadKey(true);
+                    Console.Clear();
+                    continue;
+                }
+                Console.WriteLine("Année de naissance (Exemple : 1994) :");
+                year = UserInput();
+                if (year <= 1900 || year > DateTime.Now.Year)
+                {
+                    Console.WriteLine("Erreur ! Le mois n'est pas valide. Appuyez sur une touche pour recommencer");
+                    Console.ReadKey(true);
+                    Console.Clear();
+                    continue;
+                }
+                break;
+            }
             students.Add(new Student(lastName, firstName, new DateOnly(year, month, day)));
         }
         public void AddCourse(List<Course> courses)
@@ -145,7 +239,11 @@
             string name;
             Console.WriteLine(">> Création d'un nouveau cours <<");
             Console.WriteLine("Saisir le nom du cours :");
-            name = Console.ReadLine().ToString();
+            name = UserStringInput();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                name = "Aucun nom fourni.";
+            }
             courses.Add(new Course(name));
         }
 
@@ -153,16 +251,17 @@
         {
             int userInput;
             Console.WriteLine("Veuillez rentrer l'ID du cours à supprimer :");
+            int index = 1;
             foreach (Course course in courses)
             {
-                Console.WriteLine($"{course.Id} - {course.Name}");
+                Console.WriteLine($"{index} - {course.Name}");
+                index++;
             }
             Console.WriteLine("Choix (0 pour retour au menu) :");
-            userInput = Convert.ToInt32(Console.ReadLine());
+            userInput = UserInput();
             if (userInput != 0)
             {
-                var courseToRemove = courses.Single(r => r.Id == userInput);
-                courses.Remove(courseToRemove);
+                courses.RemoveAt(userInput - 1);
             }
         }
     }
