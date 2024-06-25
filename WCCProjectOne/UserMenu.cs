@@ -13,6 +13,7 @@
             Console.WriteLine("1 - Gestion des élèves");
             Console.WriteLine("2 - Gestion des cours");
             Console.WriteLine("9 - Quitter l'application");
+            Console.WriteLine("99 - populate mockup");
             userInput = UserInput();
             return userInput;
         }
@@ -232,7 +233,7 @@
                 }
                 break;
             }
-            students.Add(new Student(lastName, firstName, new DateOnly(year, month, day)));
+            students.Add(new Student(lastName, firstName, $"{day}/{month}/{year}" ));
         }
         public void AddCourse(List<Course> courses)
         {

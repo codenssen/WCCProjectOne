@@ -16,14 +16,16 @@ namespace WCCProjectOne
         private static int _indexId = 1;
 
         // Must start at 0
+        // Issue : Need to be read on JSON file (Take maximum id +1)
         private static int _indexGrade = 0;
 
-        public Student(string lastName, string firstName, DateOnly birthDate)
+        public Student(string lastName, string firstName, string birthDate)
         {
             Id = _indexId++;
             LastName = lastName;
             FirstName = firstName;
-            _birthDate = birthDate;
+            //_birthDate = birthDate;
+            _birthDate = DateOnly.ParseExact(birthDate, "dd/MM/yyyy");
 
             _notes = new List<Note>();
         }

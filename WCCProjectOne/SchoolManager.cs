@@ -1,19 +1,20 @@
-﻿
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace WCCProjectOne
 {
     public class SchoolManager
     {
-
+        [JsonProperty("students")]
         private List<Student> _students;
+
+        [JsonProperty("courses")]
         private List<Course> _courses;
 
         public SchoolManager()
         {
-            _students = LoadData<List<Student>>("students.json") ?? new List<Student>();
-            _courses = LoadData<List<Course>>("courses.json") ?? new List<Course>();
+
+            _students = new List<Student>();
+            _courses = new List<Course>();
         }
 
         public void Run()
@@ -21,6 +22,7 @@ namespace WCCProjectOne
 
             int userInput;
             UserMenu menu = new UserMenu();
+            //FileManager.LoadFile(this);
 
             while (true)
             {
@@ -33,6 +35,16 @@ namespace WCCProjectOne
                 if (userInput == 9)
                 {
                     break;
+                }
+                if (userInput == 99)
+                {
+                    _students.Add(new Student("ABRASSART", "Aurélien", "27/07/1982"));
+                    _students.Add(new Student("ROBERTO", "Paul", "15/07/1978"));
+                    _students.Add(new Student("POUAL", "Alain", "01/01/2014"));
+                    _students.Add(new Student("EPONGE", "Bob", "19/04/1996"));
+                    _courses.Add(new Course("Mathématiques"));
+                    _courses.Add(new Course("Français"));
+                    _courses.Add(new Course("Anglais"));
                 }
                 else if (userInput == 1)
                 {
@@ -58,7 +70,7 @@ namespace WCCProjectOne
                     {
                         Console.Clear();
                         menu.AddStudent(_students);
-                        SaveData(_students, "students.json");
+                        FileManager.SaveFile(this);
                         continue;
                     }
                     if (userInput == 3)
@@ -70,6 +82,7 @@ namespace WCCProjectOne
                     {
                         menu.AddGrade(_students);
                         Console.ReadKey(true);
+                        FileManager.SaveFile(this);
                         continue;
                     }
                 }
@@ -97,12 +110,14 @@ namespace WCCProjectOne
                     {
                         Console.Clear();
                         menu.AddCourse(_courses);
+                        FileManager.SaveFile(this);
                         continue;
                     }
                     if (userInput == 3)
                     {
                         Console.Clear();
                         menu.DeleteCourse(_courses);
+                        FileManager.SaveFile(this);
                         continue;
                     }
                     else
@@ -113,35 +128,7 @@ namespace WCCProjectOne
             }
         }
 
-        private void SaveData<T>(T data, string filePath)
-        {
-            try
-            {
-                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
-                File.WriteAllText(filePath, json);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error saving data: " + ex.Message);
-            }
-        }
 
-        private T LoadData<T>(string filePath)
-        {
-            try
-            {
-                if (File.Exists(filePath))
-                {
-                    string json = File.ReadAllText(filePath);
-                    return JsonConvert.DeserializeObject<T>(json);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error loading data: " + ex.Message);
-            }
-            return default(T);
-        }
 
     }
 }

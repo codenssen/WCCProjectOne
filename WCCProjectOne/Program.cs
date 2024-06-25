@@ -1,9 +1,4 @@
-﻿
-
-using Newtonsoft.Json;
-
-
-namespace WCCProjectOne
+﻿namespace WCCProjectOne
 {
     internal class Program
     {
