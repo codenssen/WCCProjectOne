@@ -11,8 +11,5 @@ namespace WCCProjectOne
             Name = name;
             Id = id;
         }
-
- 
-
     }
 }

@@ -236,7 +236,8 @@
                 break;
             }
             id = students.Count == 0 ? 0 : students.Max(s => s.Id) + 1;
-            students.Add(new Student(lastName, firstName, $"{day}/{month}/{year}", id));
+            string formattedDate = $"{day:D2}/{month:D2}/{year}";
+            students.Add(new Student(lastName, firstName, formattedDate, id));
         }
         public void AddCourse(List<Course> courses)
         {
