@@ -35,15 +35,29 @@ namespace WCCProjectOne
                 {
                     break;
                 }
+                if (userInput == 98)
+                {
+                    File.Delete(@"app.json");
+                    _students.Clear();
+                    _courses.Clear();
+                }
                 if (userInput == 99)
                 {
-                    _students.Add(new Student("ABRASSART", "Aurélien", "27/07/1982"));
-                    _students.Add(new Student("ROBERTO", "Paul", "15/07/1978"));
-                    _students.Add(new Student("POUAL", "Alain", "01/01/2014"));
-                    _students.Add(new Student("EPONGE", "Bob", "19/04/1996"));
-                    _courses.Add(new Course("Mathématiques"));
-                    _courses.Add(new Course("Français"));
-                    _courses.Add(new Course("Anglais"));
+                    if (_students.Count == 0)
+                    {
+                        _students.Add(new Student("ABRASSART", "Aurélien", "27/07/1982", 1));
+                        _students.Add(new Student("ROBERTO", "Paul", "15/07/1978", 2));
+                        _students.Add(new Student("POUAL", "Alain", "01/01/2014", 3));
+                        _students.Add(new Student("EPONGE", "Bob", "19/04/1996", 4));
+                        FileManager.SaveFile(this);
+                    }
+                    if (_courses.Count == 0)
+                    {
+                        _courses.Add(new Course("Mathématiques", 1));
+                        _courses.Add(new Course("Français", 2));
+                        _courses.Add(new Course("Anglais", 3));
+                        FileManager.SaveFile(this);
+                    }
                 }
                 else if (userInput == 1)
                 {
@@ -62,7 +76,6 @@ namespace WCCProjectOne
                     {
                         Console.Clear();
                         menu.ListStudents(_students);
-                        Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal ");
                         Console.ReadKey(true);
                     }
                     if (userInput == 2)

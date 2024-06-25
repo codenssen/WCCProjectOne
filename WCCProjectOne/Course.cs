@@ -6,12 +6,13 @@ namespace WCCProjectOne
         public readonly int Id;
         public readonly string Name;
 
-        private static int _indexId = 1;
-
-        public Course(string name)
+        public Course(string name, int id)
         {
-            Id = _indexId++;
             Name = name;
+            Id = id;
         }
+
+ 
+
     }
 }

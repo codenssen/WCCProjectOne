@@ -13,19 +13,12 @@ namespace WCCProjectOne
 
         private List<Note> _notes;
 
-        private static int _indexId = 1;
-
-        // Must start at 0
-        // Issue : Need to be read on JSON file (Take maximum id +1)
-        private static int _indexGrade = 0;
-
-        public Student(string lastName, string firstName, string birthDate)
+        public Student(string lastName, string firstName, string birthDate, int id)
         {
-            Id = _indexId++;
             LastName = lastName;
             FirstName = firstName;
-            //_birthDate = birthDate;
             _birthDate = DateOnly.ParseExact(birthDate, "dd/MM/yyyy");
+            Id = id;
 
             _notes = new List<Note>();
         }

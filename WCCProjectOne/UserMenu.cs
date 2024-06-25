@@ -13,7 +13,8 @@
             Console.WriteLine("1 - Gestion des élèves");
             Console.WriteLine("2 - Gestion des cours");
             Console.WriteLine("9 - Quitter l'application");
-            Console.WriteLine("99 - populate mockup");
+            Console.WriteLine("dev : 98 - Effacer fichier JSON");
+            Console.WriteLine("dev : 99 - populate mockup");
             userInput = UserInput();
             return userInput;
         }
@@ -109,6 +110,7 @@
                 Console.WriteLine($"{index} - {student.LastName} - {student.FirstName}");
                 index++;
             }
+            Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
 
         }
         public void listCourses(List<Course> courses)
@@ -159,10 +161,7 @@
             }
             Console.WriteLine("Choix de l'élève ?");
             studentId = UserInput();
-            //foreach (Course course in courses)
-            //{
-            //    Console.WriteLine($"{course.Id} - {course.Name}");
-            //}
+
             Console.WriteLine("Choix du cours ?");
             courseId = UserInput();
             Console.WriteLine("Merci de rentrer votre note (entre 0 et 20)");
@@ -187,6 +186,8 @@
             int year;
             int month;
             int day;
+            int id;
+
 
             while (true)
             {
@@ -222,6 +223,7 @@
                     Console.Clear();
                     continue;
                 }
+                
                 Console.WriteLine("Année de naissance (Exemple : 1994) :");
                 year = UserInput();
                 if (year <= 1900 || year > DateTime.Now.Year)
@@ -233,11 +235,13 @@
                 }
                 break;
             }
-            students.Add(new Student(lastName, firstName, $"{day}/{month}/{year}" ));
+            id = students.Count == 0 ? 0 : students.Max(s => s.Id) + 1;
+            students.Add(new Student(lastName, firstName, $"{day}/{month}/{year}", id));
         }
         public void AddCourse(List<Course> courses)
         {
             string name;
+            int id;
             Console.WriteLine(">> Création d'un nouveau cours <<");
             Console.WriteLine("Saisir le nom du cours :");
             name = UserStringInput();
@@ -245,7 +249,8 @@
             {
                 name = "Aucun nom de cours fourni.";
             }
-            courses.Add(new Course(name));
+            id = courses.Count == 0 ? 0 : courses.Max(c => c.Id) + 1;
+            courses.Add(new Course(name, id));
         }
 
         public void DeleteCourse(List<Course> courses)
