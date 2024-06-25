@@ -22,7 +22,6 @@ namespace WCCProjectOne
 
             int userInput;
             UserMenu menu = new UserMenu();
-            //FileManager.LoadFile(this);
 
             while (true)
             {

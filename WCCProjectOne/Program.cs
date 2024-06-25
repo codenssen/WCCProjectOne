@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            SchoolManager schoolManager = new SchoolManager();
+            SchoolManager schoolManager = FileManager.LoadFile();
             schoolManager.Run();
         }
     }

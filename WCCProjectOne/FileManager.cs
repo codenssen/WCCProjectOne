@@ -13,7 +13,7 @@ namespace WCCProjectOne
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erreure au chargement du fichier");
+                Console.WriteLine("Erreur au chargement du fichier");
                 Console.WriteLine(ex.ToString());
                 Console.ReadKey(true);
                 return false;
@@ -21,10 +21,25 @@ namespace WCCProjectOne
             return true;
         }
 
-        static public SchoolManager LoadFile(SchoolManager app)
+        static public SchoolManager LoadFile()
         {
-            app = JsonConvert.DeserializeObject<SchoolManager>(File.ReadAllText(@"app.json"));
-            return app;
+            string filePath = @"app.json";
+            if (!File.Exists(filePath))
+            {
+                return new SchoolManager();
+            }
+            try
+            {
+                return JsonConvert.DeserializeObject<SchoolManager>(File.ReadAllText(filePath));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur au chargement du fichier");
+                Console.WriteLine(ex.ToString());
+                Console.ReadKey(true);
+                return new SchoolManager();
+            }
+
         }
     }
 }
