@@ -13,6 +13,7 @@
             Console.WriteLine("1 - Gestion des élèves");
             Console.WriteLine("2 - Gestion des cours");
             Console.WriteLine("9 - Quitter l'application");
+            Console.WriteLine("99 - Dev : populate mockup");
             userInput = UserInput();
             return userInput;
         }
@@ -42,7 +43,7 @@
 
             return userInput;
         }
-        
+
         public string UserStringInput()
         {
             string userStringInput;

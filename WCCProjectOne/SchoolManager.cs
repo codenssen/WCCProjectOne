@@ -4,7 +4,17 @@ namespace WCCProjectOne
 {
     public class SchoolManager
     {
-        public void Run(List<Student> students, List<Course> courses)
+
+        private List<Student> _students;
+        private List<Course> _courses;
+
+        public SchoolManager()
+        {
+            _students = new List<Student>();
+            _courses = new List<Course>();
+        }
+
+        public void Run()
         {
 
             int userInput;
@@ -22,6 +32,16 @@ namespace WCCProjectOne
                 {
                     break;
                 }
+                if (userInput == 99)
+                {
+                    _students.Add(new Student("ABRASSART", "Aurélien", new DateOnly(1982, 07, 27)));
+                    _students.Add(new Student("ROBERTO", "Paul", new DateOnly(1998, 03, 14)));
+                    _students.Add(new Student("POUAL", "Alain", new DateOnly(1998, 03, 14)));
+                    _students.Add(new Student("EPONGE", "Bob", new DateOnly(1998, 03, 14)));
+                    _courses.Add(new Course("Mathématiques"));
+                    _courses.Add(new Course("Français"));
+                    _courses.Add(new Course("Anglais"));
+                }
                 else if (userInput == 1)
                 {
                     // <<< Sous-menu Elève >>>
@@ -38,24 +58,24 @@ namespace WCCProjectOne
                     if (userInput == 1)
                     {
                         Console.Clear();
-                        menu.ListStudents(students);
+                        menu.ListStudents(_students);
                         Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal ");
                         Console.ReadKey(true);
                     }
                     if (userInput == 2)
                     {
                         Console.Clear();
-                        menu.AddStudent(students);
+                        menu.AddStudent(_students);
                         continue;
                     }
                     if (userInput == 3)
                     {
-                        menu.PrintStudent(students);
+                        menu.PrintStudent(_students);
                         continue;
                     }
                     if (userInput == 4)
                     {
-                        menu.AddGrade(students);
+                        menu.AddGrade(_students);
                         Console.ReadKey(true);
                         continue;
                     }
@@ -75,7 +95,7 @@ namespace WCCProjectOne
                     if (userInput == 1)
                     {
                         Console.Clear();
-                        menu.listCourses(courses);
+                        menu.listCourses(_courses);
                         Console.ReadKey(true);
                         continue;
 
@@ -83,13 +103,13 @@ namespace WCCProjectOne
                     if (userInput == 2)
                     {
                         Console.Clear();
-                        menu.AddCourse(courses);
+                        menu.AddCourse(_courses);
                         continue;
                     }
                     if (userInput == 3)
                     {
                         Console.Clear();
-                        menu.DeleteCourse(courses);
+                        menu.DeleteCourse(_courses);
                         continue;
                     }
                     else
