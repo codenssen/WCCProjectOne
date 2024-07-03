@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Serilog;
 
 namespace WCCProjectOne
 {
@@ -10,6 +11,7 @@ namespace WCCProjectOne
             try
             {
                 File.WriteAllText(@"app.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+                Log.Information("Sauvegarde fichier");
             }
             catch (Exception ex)
             {
@@ -30,7 +32,9 @@ namespace WCCProjectOne
             }
             try
             {
+                Log.Information("Chargement fichier");
                 return JsonConvert.DeserializeObject<DataManager>(File.ReadAllText(filePath));
+
             }
             catch (Exception ex)
             {

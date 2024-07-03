@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Serilog;
+using System.Globalization;
 
 namespace WCCProjectOne
 {
@@ -158,7 +159,7 @@ namespace WCCProjectOne
             Console.WriteLine();
             Console.WriteLine($"Nom :{student.LastName}");
             Console.WriteLine($"Prénom : {student.FirstName}");
-            Console.WriteLine($"Date de naissance : {student.BirthDate}");
+            Console.WriteLine($"Date de naissance : {student.BirthDate.ToString("dd-MM-yyyy")}");
 
 
             if (notes.Count > 0)
@@ -271,7 +272,8 @@ namespace WCCProjectOne
                 data.AddStudent(lastName, firstName, birthdate, id);
 
                 Console.WriteLine("Nouvel élève ajouté avec succès !");
-                break; 
+                Log.Information($"Nouvelle étudiant crée : {lastName} - {firstName}");
+                break;
             }
         }
         public void AddCourse(DataManager data)
