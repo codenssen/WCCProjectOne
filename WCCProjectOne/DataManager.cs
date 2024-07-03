@@ -38,7 +38,7 @@ namespace WCCProjectOne
         public Student GetStudent(int id)
         {
             return _students.SingleOrDefault(s => s.Id == id);
-       
+
         }
         public int GetOneStudentId(int index)
         {
@@ -55,6 +55,7 @@ namespace WCCProjectOne
                 Console.WriteLine($"{index} - {student.FirstName} - {student.LastName}");
                 index++;
             }
+            Console.WriteLine("========================");
         }
 
         public void AddStudent(string lastName, string firstName, DateTime formattedDate, int id)
@@ -74,6 +75,7 @@ namespace WCCProjectOne
                 Console.WriteLine($"{index} - {course.Name}");
                 index++;
             }
+            Console.WriteLine("========================");
         }
         public int GetOneCourseId(int index)
         {
@@ -84,7 +86,7 @@ namespace WCCProjectOne
         {
             Course returnedCourse = _courses.SingleOrDefault(s => s.Id == id);
             return returnedCourse != null ? returnedCourse.Name : "Cours non trouvé";
-           
+
         }
         public bool DeleteCourse(int id)
         {
@@ -100,10 +102,6 @@ namespace WCCProjectOne
         public void AddNote(double grade, string appreciation, int studentId, int courseId)
         {
             _notes.Add(new Note(grade, appreciation, studentId, courseId));
-            foreach (Note note in _notes)
-            {
-                Console.WriteLine(note.Grade);
-            }
         }
 
     }

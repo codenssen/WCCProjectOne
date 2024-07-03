@@ -11,7 +11,7 @@ namespace WCCProjectOne
         {
             int userInput;
             Console.Clear();
-            Console.WriteLine("/=/ Bienvenue dans votre application de gestion Eleves/Cours /=/");
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Blue, "\"/=/ Bienvenue dans votre application de gestion Eleves/Cours /=/");
             Console.WriteLine("");
             Console.WriteLine("Faites votre choix :");
             Console.WriteLine("1 - Gestion des élèves");
@@ -33,6 +33,7 @@ namespace WCCProjectOne
                 Console.WriteLine("====================/!\\=====================");
                 Console.WriteLine("|  Erreur  ! Merci de rentrer un chiffre !  |");
                 Console.WriteLine("============================================");
+                Log.Warning(ex.Message);
                 Console.ReadKey(true);
                 return 0;
             }
@@ -59,6 +60,7 @@ namespace WCCProjectOne
                 Console.WriteLine("=======================/!\\========================");
                 Console.WriteLine("|  Erreur  ! Merci de rentrer un texte correct !  |");
                 Console.WriteLine("==================================================");
+                Log.Warning(ex.Message);
                 Console.ReadKey(true);
                 return "";
             }
@@ -80,7 +82,8 @@ namespace WCCProjectOne
         {
             int userInput;
             Console.Clear();
-            Console.WriteLine(">> Gestion des élèves <<");
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Gestion des élèves <<");
+            Console.WriteLine();
             Console.WriteLine("Faites votre choix :");
             Console.WriteLine("1 - Lister les élèves");
             Console.WriteLine("2 - Créer un nouvel élève");
@@ -94,7 +97,8 @@ namespace WCCProjectOne
         {
             int userInput;
             Console.Clear();
-            Console.WriteLine(">> Gestion des cours <<");
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, "\">> Gestion des cours <<");
+            Console.WriteLine();
             Console.WriteLine("Faites votre choix :");
             Console.WriteLine("1 - Lister les cours existants");
             Console.WriteLine("2 - Ajouter un nouveau cours au programme");
@@ -106,8 +110,11 @@ namespace WCCProjectOne
         public void ListStudents(DataManager data)
         {
             Console.Clear();
+
             List<Student> students = data.GetStudents();
-            Console.WriteLine(">> Liste des elèves : <<");
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Liste des elèves : <<");
+            Console.WriteLine();
+
             int index = 1;
             foreach (Student student in students)
             {
@@ -121,6 +128,9 @@ namespace WCCProjectOne
         public void listCourses(DataManager data)
         {
             Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Liste des cours <<");
+            Console.WriteLine();
+
             int index = 1;
             List<Course> courses = data.GetCourses();
             foreach (Course course in courses)
@@ -137,9 +147,14 @@ namespace WCCProjectOne
             List<Student> students = data.GetStudents();
 
             Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Affichage d'un éléve (détails) <<");
+
+            Console.WriteLine();
             Console.WriteLine("Voici la liste des élèves :");
-            Console.WriteLine("Choisir l'élève à afficher en tapant son identifiant");
+
             data.PrintStudents();
+            Console.WriteLine();
+            Console.WriteLine("Choisir l'élève à afficher en tapant son identifiant");
             Console.WriteLine("Choix :");
             int indexStudent = UserInput();
             int studentId = data.GetOneStudentId(indexStudent);
@@ -160,9 +175,6 @@ namespace WCCProjectOne
             Console.WriteLine("==========================================");
             Console.WriteLine("Informations sur l'élève : ");
             Console.WriteLine();
-            //Console.WriteLine($"Nom :{student.LastName}");
-            //Console.WriteLine($"Prénom : {student.FirstName}");
-            //Console.WriteLine($"Date de naissance : {student.BirthDate.ToString("dd-MM-yyyy")}");
             Console.WriteLine("{0,-20} {1, -10}", "Nom ", $": {student.LastName}");
             Console.WriteLine("{0,-20} {1, -10}", "Prénom ", $": {student.FirstName}");
             Console.WriteLine("{0,-20} {1, -10}", "Date de naissance ", $": {student.BirthDate.ToString("dd-MM-yyyy")}");
@@ -202,6 +214,8 @@ namespace WCCProjectOne
         public void AddGrade(DataManager data)
         {
             Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Ajout d'une note à un éléve <<");
+            Console.WriteLine();
 
             List<Note> notes = data.GetNotes();
             double grade;
@@ -219,18 +233,23 @@ namespace WCCProjectOne
             int indexCourse = UserInput();
             courseId = data.GetOneCourseId(indexCourse);
 
-            Console.WriteLine("Merci de rentrer votre note (entre 0 et 20)");
-            grade = UserInput();
+            while (true)
+            {
+                Console.WriteLine("Merci de rentrer votre note (entre 0 et 20)");
+                grade = UserInput();
+                if (grade >= 0 && grade <= 20) break;
+                else Console.WriteLine("Merci de choisir une note conforme");
+            }
 
             Console.WriteLine("Merci de rentrer votre appréciation (ou laisser vide)");
             appreciation = UserStringInput();
-
             if (string.IsNullOrWhiteSpace(appreciation))
             {
                 appreciation = "Aucune appréciation fournie.";
             }
             data.AddNote(grade, appreciation, studentId, courseId);
             Log.Information($"Nouvelle note créée : {grade} - {appreciation} - {studentId} - {courseId}");
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, "Note créée ! Appuyez sur une touche pour continuer");
             Console.ReadKey(true);
 
         }
@@ -245,7 +264,8 @@ namespace WCCProjectOne
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine(">> Création d'un nouvel élève <<");
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Création d'un nouvel élève <<");
+                Console.WriteLine();
 
                 while (true)
                 {
@@ -279,7 +299,8 @@ namespace WCCProjectOne
                 // Créez et ajoutez l'élève à la liste
                 data.AddStudent(lastName, firstName, birthdate, id);
 
-                Console.WriteLine("Nouvel élève ajouté avec succès !");
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, "Nouvel élève ajouté avec succès ! Appuyez sur une touche pour continuer");
+                Console.ReadKey(true);
                 Log.Information($"Nouvelle étudiant créée : {lastName} - {firstName} - {id}");
                 break;
             }
@@ -287,10 +308,15 @@ namespace WCCProjectOne
         public void AddCourse(DataManager data)
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(">> Création d'un nouveau cours <<");
+            Console.ResetColor();
+            Console.WriteLine();
+
             string name;
             int id;
             List<Course> courses = data.GetCourses();
-            Console.WriteLine(">> Création d'un nouveau cours <<");
+
             Console.WriteLine("Saisir le nom du cours :");
             name = UserStringInput();
             if (string.IsNullOrWhiteSpace(name))
@@ -305,6 +331,9 @@ namespace WCCProjectOne
         public void DeleteCourse(DataManager data)
         {
             Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Suppresion d'un cours <<");
+            Console.WriteLine();
+
             int userInput;
             List<Course> courses = data.GetCourses();
             Console.WriteLine("Veuillez rentrer l'ID du cours à supprimer :");
@@ -314,18 +343,25 @@ namespace WCCProjectOne
                 Console.WriteLine($"{index} - {course.Name}");
                 index++;
             }
+            Console.WriteLine();
             Console.WriteLine("Choix (0 pour retour au menu) :");
             userInput = UserInput();
             if (userInput != 0)
             {
                 int courseId = data.GetOneCourseId(userInput);
-                Console.WriteLine("Souhaitez-vous vraiment supprimer ce cours ? (O/N) :");
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Souhaitez-vous vraiment supprimer ce cours ? (O/N) :");
                 string userConfirm = UserStringInput();
-                if (userConfirm == "O")
+                if (userConfirm == "o" || userConfirm == "O")
                 {
                     bool confirm = data.DeleteCourse(courseId);
-                    Console.WriteLine(confirm ? "Suppression effectuée" : "Erreur de suppression");
+                    ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, confirm ? "Suppression effectuée" : "Erreur de suppression");
+                    Console.ReadKey(true);
                     Log.Information($"Cours supprimé : {courseId}");
+                }
+                else
+                {
+                    ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Annulé ! Appuyez sur une touche pour continuer");
+                    Console.ReadKey(true);
                 }
             }
         }
