@@ -57,7 +57,7 @@ namespace WCCProjectOne
             }
         }
 
-        public void AddStudent(string lastName, string firstName, string formattedDate, int id)
+        public void AddStudent(string lastName, string firstName, DateTime formattedDate, int id)
         {
             _students.Add(new Student(lastName, firstName, formattedDate, id));
         }

@@ -5,19 +5,19 @@ namespace WCCProjectOne
 {
     public class Student
     {
-        private DateOnly _birthDate;
+        private DateTime _birthDate;
 
         public readonly int Id;
         public readonly string LastName;
         public readonly string FirstName;
 
-        public string BirthDate { get { return _birthDate.ToString(); } }
+        public string BirthDate { get { return _birthDate.ToString("dd/MM/yyyy"); } }
 
-        public Student(string lastName, string firstName, string birthDate, int id)
+        public Student(string lastName, string firstName, DateTime birthDate, int id)
         {
             LastName = lastName;
             FirstName = firstName;
-            _birthDate = DateOnly.ParseExact(birthDate, "dd/MM/yyyy");
+            _birthDate = birthDate;
             Id = id;
         }
 

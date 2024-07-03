@@ -1,4 +1,6 @@
-﻿namespace WCCProjectOne
+﻿using System.Globalization;
+
+namespace WCCProjectOne
 {
     public class UserMenu
     {
@@ -142,12 +144,23 @@
 
             List<Note> notes = data.GetNotes().Where(note => note.StudentId == studentId).OrderBy(note => note.StudentId).ToList();
 
+            // Calcul de la moyenne des notes
+            double average;
+            double sum = 0;
+            foreach (Note note in notes)
+            {
+                sum += note.Grade;
+            }
+            average = sum / notes.Count;
+
             Console.WriteLine("==========================================");
             Console.WriteLine("Informations sur l'élève : ");
             Console.WriteLine();
             Console.WriteLine($"Nom :{student.LastName}");
             Console.WriteLine($"Prénom : {student.FirstName}");
             Console.WriteLine($"Date de naissance : {student.BirthDate}");
+
+
             if (notes.Count > 0)
             {
                 Console.WriteLine();
@@ -164,6 +177,13 @@
                     Console.WriteLine();
 
                 }
+                Console.WriteLine();
+                Console.WriteLine($"Moyenne : {average} / 20");
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Pas de notes enregistrées pour cet éléve");
             }
             Console.WriteLine("==========================================");
             Console.WriteLine("Taper une touche pour revenir au menu principal");
@@ -210,61 +230,49 @@
             List<Student> students = data.GetStudents();
             string lastName;
             string firstName;
-            int year;
-            int month;
-            int day;
+            DateTime birthdate;
             int id;
 
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine(">> Création d'un nouvel élève <<");
-                Console.WriteLine("Saisir le nom de l'élève :");
-                lastName = UserStringInput();
-                if (string.IsNullOrWhiteSpace(lastName))
+
+                while (true)
                 {
-                    lastName = "Aucun nom fourni";
-                }
-                Console.WriteLine("Saisir le prénom de l'élève :");
-                firstName = UserStringInput();
-                if (string.IsNullOrWhiteSpace(firstName))
-                {
-                    firstName = "Aucune prénom fourni";
-                }
-                Console.WriteLine("Saisir la date de naissance de l'élève :");
-                Console.WriteLine("Jour de naissance :");
-                day = UserInput();
-                if (day <= 0 || day > 31)
-                {
-                    Console.WriteLine("Erreur ! Le jour n'est pas valide. Appuyez sur une touche pour recommencer");
-                    Console.ReadKey(true);
-                    Console.Clear();
-                    continue;
-                }
-                Console.WriteLine("Mois de naissance (Exemple : 07 pour Juillet) :");
-                month = UserInput();
-                if (month <= 0 || month > 12)
-                {
-                    Console.WriteLine("Erreur ! Le mois n'est pas valide. Appuyez sur une touche pour recommencer");
-                    Console.ReadKey(true);
-                    Console.Clear();
-                    continue;
+                    Console.WriteLine("Saisir le nom de l'élève :");
+                    lastName = UserStringInput();
+                    if (!string.IsNullOrWhiteSpace(lastName)) break;
+                    else Console.WriteLine("Format de nom inconnect. Veuillez réessayer.");
                 }
 
-                Console.WriteLine("Année de naissance (Exemple : 1994) :");
-                year = UserInput();
-                if (year <= 1900 || year > DateTime.Now.Year)
+                // Boucle input prénom
+                while (true)
                 {
-                    Console.WriteLine("Erreur ! Le mois n'est pas valide. Appuyez sur une touche pour recommencer");
-                    Console.ReadKey(true);
-                    Console.Clear();
-                    continue;
+                    Console.WriteLine("Saisir le prénom de l'élève :");
+                    firstName = UserStringInput();
+                    if (!string.IsNullOrWhiteSpace(firstName)) break;
+                    else Console.WriteLine("Format de prénom inconnect. Veuillez réessayer.");
                 }
-                break;
+
+                // Boucle input date de naissance
+                while (true)
+                {
+                    Console.Write("Entrez la date de naissance (JJ-MM-AAAA): ");
+                    string birthdateInput = UserStringInput();
+                    if (DateTime.TryParseExact(birthdateInput, "dd-MM-yyyy", null, DateTimeStyles.None, out birthdate)) break;
+                    else Console.WriteLine("Format de date incorrect. Veuillez réessayer.");
+                }
+
+                // Générez un nouvel ID pour l'élève
+                id = students.Count == 0 ? 1 : students.Max(s => s.Id) + 1;
+
+                // Créez et ajoutez l'élève à la liste
+                data.AddStudent(lastName, firstName, birthdate, id);
+
+                Console.WriteLine("Nouvel élève ajouté avec succès !");
+                break; 
             }
-            id = students.Count == 0 ? 0 : students.Max(s => s.Id) + 1;
-            string formattedDate = $"{day:D2}/{month:D2}/{year}";
-            data.AddStudent(lastName, firstName, formattedDate, id);
         }
         public void AddCourse(DataManager data)
         {
