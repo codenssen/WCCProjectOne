@@ -37,7 +37,7 @@ namespace WCCProjectOne
         }
         public Student GetStudent(int id)
         {
-            return _students.FirstOrDefault(s => s.Id == id);
+            return _students.SingleOrDefault(s => s.Id == id);
        
         }
         public int GetOneStudentId(int index)
@@ -82,7 +82,7 @@ namespace WCCProjectOne
         }
         public string GetOneCourseName(int id)
         {
-            Course returnedCourse = _courses.FirstOrDefault(s => s.Id == id);
+            Course returnedCourse = _courses.SingleOrDefault(s => s.Id == id);
             return returnedCourse != null ? returnedCourse.Name : "Cours non trouvé";
            
         }
