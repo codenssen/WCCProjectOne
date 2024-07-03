@@ -17,7 +17,7 @@ namespace WCCProjectOne
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Debug()
                     .WriteTo.File(logDirectory, rollingInterval: RollingInterval.Day, retainedFileCountLimit: null)
-                    .WriteTo.Console()
+                    //.WriteTo.Console()
                     .CreateLogger();
 
                 isInitialized = true;

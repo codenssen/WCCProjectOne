@@ -1,5 +1,6 @@
 ﻿using Serilog;
 using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
 
 namespace WCCProjectOne
 {
@@ -114,6 +115,7 @@ namespace WCCProjectOne
                 index++;
             }
             Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
+            Log.Information("Consultation de la liste des élèves");
             Console.ReadKey(true);
         }
         public void listCourses(DataManager data)
@@ -153,33 +155,37 @@ namespace WCCProjectOne
                 sum += note.Grade;
             }
             average = sum / notes.Count;
+            average = Math.Round(average, 1);
 
             Console.WriteLine("==========================================");
             Console.WriteLine("Informations sur l'élève : ");
             Console.WriteLine();
-            Console.WriteLine($"Nom :{student.LastName}");
-            Console.WriteLine($"Prénom : {student.FirstName}");
-            Console.WriteLine($"Date de naissance : {student.BirthDate.ToString("dd-MM-yyyy")}");
+            //Console.WriteLine($"Nom :{student.LastName}");
+            //Console.WriteLine($"Prénom : {student.FirstName}");
+            //Console.WriteLine($"Date de naissance : {student.BirthDate.ToString("dd-MM-yyyy")}");
+            Console.WriteLine("{0,-20} {1, -10}", "Nom ", $": {student.LastName}");
+            Console.WriteLine("{0,-20} {1, -10}", "Prénom ", $": {student.FirstName}");
+            Console.WriteLine("{0,-20} {1, -10}", "Date de naissance ", $": {student.BirthDate.ToString("dd-MM-yyyy")}");
 
 
             if (notes.Count > 0)
             {
                 Console.WriteLine();
-                Console.WriteLine("Résultats scolaires :");
+                Console.WriteLine(" Résultats scolaires :");
                 Console.WriteLine("");
                 foreach (Note note in notes)
                 {
-                    Console.WriteLine($"Cours : {data.GetOneCourseName(note.CourseId)}");
-                    Console.WriteLine($"Note : {note.Grade} / 20");
+                    Console.WriteLine($"    Cours : {data.GetOneCourseName(note.CourseId)}");
+                    Console.WriteLine($"        Note : {note.Grade} / 20");
                     if (note.Appreciation != "")
                     {
-                        Console.WriteLine($"Appréciation : {note.Appreciation}");
+                        Console.WriteLine($"        Appréciation : {note.Appreciation}");
                     }
                     Console.WriteLine();
 
                 }
                 Console.WriteLine();
-                Console.WriteLine($"Moyenne : {average} / 20");
+                Console.WriteLine($"    Moyenne : {average} / 20");
             }
             else
             {
@@ -188,6 +194,7 @@ namespace WCCProjectOne
             }
             Console.WriteLine("==========================================");
             Console.WriteLine("Taper une touche pour revenir au menu principal");
+            Log.Information($"Consultation des détails de l'élève {student.LastName} - {student.FirstName}");
             Console.ReadKey(true);
 
         }
@@ -223,6 +230,7 @@ namespace WCCProjectOne
                 appreciation = "Aucune appréciation fournie.";
             }
             data.AddNote(grade, appreciation, studentId, courseId);
+            Log.Information($"Nouvelle note créée : {grade} - {appreciation} - {studentId} - {courseId}");
             Console.ReadKey(true);
 
         }
@@ -272,7 +280,7 @@ namespace WCCProjectOne
                 data.AddStudent(lastName, firstName, birthdate, id);
 
                 Console.WriteLine("Nouvel élève ajouté avec succès !");
-                Log.Information($"Nouvelle étudiant crée : {lastName} - {firstName}");
+                Log.Information($"Nouvelle étudiant créée : {lastName} - {firstName} - {id}");
                 break;
             }
         }
@@ -291,6 +299,7 @@ namespace WCCProjectOne
             }
             id = courses.Count == 0 ? 0 : courses.Max(c => c.Id) + 1;
             courses.Add(new Course(name, id));
+            Log.Information($"Nouveau cours créé : {name} - {id}");
         }
 
         public void DeleteCourse(DataManager data)
@@ -310,9 +319,14 @@ namespace WCCProjectOne
             if (userInput != 0)
             {
                 int courseId = data.GetOneCourseId(userInput);
-                bool confirm = data.DeleteCourse(courseId);
-                Console.WriteLine(confirm ? "Suppression effectuée" : "Erreur de suppression");
-                Console.ReadKey(true);
+                Console.WriteLine("Souhaitez-vous vraiment supprimer ce cours ? (O/N) :");
+                string userConfirm = UserStringInput();
+                if (userConfirm == "O")
+                {
+                    bool confirm = data.DeleteCourse(courseId);
+                    Console.WriteLine(confirm ? "Suppression effectuée" : "Erreur de suppression");
+                    Log.Information($"Cours supprimé : {courseId}");
+                }
             }
         }
     }

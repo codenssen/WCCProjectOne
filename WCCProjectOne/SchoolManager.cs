@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Serilog;
 
 namespace WCCProjectOne
 {
@@ -15,10 +16,12 @@ namespace WCCProjectOne
                 userInput = menu.Home();
                 if (userInput == 0)
                 {
+                    Log.Information("Retour au menu principal");
                     continue;
                 }
                 if (userInput == 9)
                 {
+                    Log.Information("Sortie normale du programme");
                     break;
                 }
                 else if (userInput == 1)

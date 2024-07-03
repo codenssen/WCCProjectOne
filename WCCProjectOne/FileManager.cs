@@ -17,6 +17,7 @@ namespace WCCProjectOne
             {
                 Console.WriteLine("Erreur au chargement du fichier");
                 Console.WriteLine(ex.ToString());
+                Log.Warning(ex.ToString());
                 Console.ReadKey(true);
                 return false;
             }
@@ -40,6 +41,7 @@ namespace WCCProjectOne
             {
                 Console.WriteLine("Erreur au chargement du fichier");
                 Console.WriteLine(ex.ToString());
+                Log.Warning(ex.ToString());
                 Console.ReadKey(true);
                 return new DataManager();
             }
