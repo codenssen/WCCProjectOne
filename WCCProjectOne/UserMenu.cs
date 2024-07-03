@@ -13,8 +13,6 @@
             Console.WriteLine("1 - Gestion des élèves");
             Console.WriteLine("2 - Gestion des cours");
             Console.WriteLine("9 - Quitter l'application");
-            Console.WriteLine("dev : 98 - Effacer fichier JSON");
-            Console.WriteLine("dev : 99 - populate mockup");
             userInput = UserInput();
             return userInput;
         }
@@ -101,8 +99,10 @@
             userInput = UserInput();
             return userInput;
         }
-        public void ListStudents(List<Student> students)
+        public void ListStudents(DataManager data)
         {
+            Console.Clear();
+            List<Student> students = data.GetStudents();
             Console.WriteLine(">> Liste des elèves : <<");
             int index = 1;
             foreach (Student student in students)
@@ -111,86 +111,113 @@
                 index++;
             }
             Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
-
+            Console.ReadKey(true);
         }
-        public void listCourses(List<Course> courses)
+        public void listCourses(DataManager data)
         {
+            Console.Clear();
             int index = 1;
+            List<Course> courses = data.GetCourses();
             foreach (Course course in courses)
             {
                 Console.WriteLine($"{index} - {course.Name}");
                 index++;
             }
+            Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
+            Console.ReadKey(true);
         }
 
-        public void PrintStudent(List<Student> students)
+        public void PrintStudent(DataManager data)
         {
-            int userInput;
+            List<Student> students = data.GetStudents();
 
             Console.Clear();
             Console.WriteLine("Voici la liste des élèves :");
             Console.WriteLine("Choisir l'élève à afficher en tapant son identifiant");
-            foreach (Student student in students)
-            {
-                Console.WriteLine($"ID : {student.Id} - Nom : {student.LastName}");
-            }
+            data.PrintStudents();
             Console.WriteLine("Choix :");
-            userInput = UserInput();
-            IEnumerable<Student> printedStudent = students.Where(student => student.Id == userInput);
+            int indexStudent = UserInput();
+            int studentId = data.GetOneStudentId(indexStudent);
+            Student student = data.GetStudent(studentId);
+
+            List<Note> notes = data.GetNotes().Where(note => note.StudentId == studentId).OrderBy(note => note.StudentId).ToList();
+
             Console.WriteLine("==========================================");
-            foreach (Student student in printedStudent)
+            Console.WriteLine("Informations sur l'élève : ");
+            Console.WriteLine();
+            Console.WriteLine($"Nom :{student.LastName}");
+            Console.WriteLine($"Prénom : {student.FirstName}");
+            Console.WriteLine($"Date de naissance : {student.BirthDate}");
+            if (notes.Count > 0)
             {
-                student.ListOne();
-                Console.WriteLine("==========================================");
-                student.PrintStudentGrades();
+                Console.WriteLine();
+                Console.WriteLine("Résultats scolaires :");
+                Console.WriteLine("");
+                foreach (Note note in notes)
+                {
+                    Console.WriteLine($"Cours : {data.GetOneCourseName(note.CourseId)}");
+                    Console.WriteLine($"Note : {note.Grade} / 20");
+                    if (note.Appreciation != "")
+                    {
+                        Console.WriteLine($"Appréciation : {note.Appreciation}");
+                    }
+                    Console.WriteLine();
+
+                }
             }
+            Console.WriteLine("==========================================");
             Console.WriteLine("Taper une touche pour revenir au menu principal");
             Console.ReadKey(true);
 
         }
 
-        public void AddGrade(List<Student> students)
+        public void AddGrade(DataManager data)
         {
+            Console.Clear();
+
+            List<Note> notes = data.GetNotes();
+            double grade;
+            string appreciation;
             int studentId;
             int courseId;
-            int grade;
-            string? appreciation;
-            foreach (Student student in students)
-            {
-                Console.WriteLine($"{student.Id} - {student.LastName}");
-            }
-            Console.WriteLine("Choix de l'élève ?");
-            studentId = UserInput();
 
-            Console.WriteLine("Choix du cours ?");
-            courseId = UserInput();
+            data.PrintStudents();
+            Console.WriteLine("Merci de choisir un élève :");
+            int indexStudent = UserInput();
+            studentId = data.GetOneStudentId(indexStudent);
+
+            data.PrintCourses();
+            Console.WriteLine("Merci de choisir le cours :");
+            int indexCourse = UserInput();
+            courseId = data.GetOneCourseId(indexCourse);
+
             Console.WriteLine("Merci de rentrer votre note (entre 0 et 20)");
             grade = UserInput();
+
             Console.WriteLine("Merci de rentrer votre appréciation (ou laisser vide)");
             appreciation = UserStringInput();
+
             if (string.IsNullOrWhiteSpace(appreciation))
             {
                 appreciation = "Aucune appréciation fournie.";
             }
-            var query = students.Where(student => student.Id == studentId);
-            foreach (Student student in query)
-            {
-                student.AddGrade(grade, appreciation, courseId);
-            }
+            data.AddNote(grade, appreciation, studentId, courseId);
+            Console.ReadKey(true);
 
         }
-        public void AddStudent(List<Student> students)
+        public void AddStudent(DataManager data)
         {
-            string? lastName;
-            string? firstName;
+            List<Student> students = data.GetStudents();
+            string lastName;
+            string firstName;
             int year;
             int month;
             int day;
             int id;
 
-
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine(">> Création d'un nouvel élève <<");
                 Console.WriteLine("Saisir le nom de l'élève :");
                 lastName = UserStringInput();
@@ -223,7 +250,7 @@
                     Console.Clear();
                     continue;
                 }
-                
+
                 Console.WriteLine("Année de naissance (Exemple : 1994) :");
                 year = UserInput();
                 if (year <= 1900 || year > DateTime.Now.Year)
@@ -237,12 +264,14 @@
             }
             id = students.Count == 0 ? 0 : students.Max(s => s.Id) + 1;
             string formattedDate = $"{day:D2}/{month:D2}/{year}";
-            students.Add(new Student(lastName, firstName, formattedDate, id));
+            data.AddStudent(lastName, firstName, formattedDate, id);
         }
-        public void AddCourse(List<Course> courses)
+        public void AddCourse(DataManager data)
         {
+            Console.Clear();
             string name;
             int id;
+            List<Course> courses = data.GetCourses();
             Console.WriteLine(">> Création d'un nouveau cours <<");
             Console.WriteLine("Saisir le nom du cours :");
             name = UserStringInput();
@@ -254,9 +283,11 @@
             courses.Add(new Course(name, id));
         }
 
-        public void DeleteCourse(List<Course> courses)
+        public void DeleteCourse(DataManager data)
         {
+            Console.Clear();
             int userInput;
+            List<Course> courses = data.GetCourses();
             Console.WriteLine("Veuillez rentrer l'ID du cours à supprimer :");
             int index = 1;
             foreach (Course course in courses)
@@ -268,7 +299,10 @@
             userInput = UserInput();
             if (userInput != 0)
             {
-                courses.RemoveAt(userInput - 1);
+                int courseId = data.GetOneCourseId(userInput);
+                bool confirm = data.DeleteCourse(courseId);
+                Console.WriteLine(confirm ? "Suppression effectuée" : "Erreur de suppression");
+                Console.ReadKey(true);
             }
         }
     }

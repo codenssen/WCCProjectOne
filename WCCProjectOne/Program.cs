@@ -4,8 +4,10 @@
     {
         static void Main(string[] args)
         {
-            SchoolManager schoolManager = FileManager.LoadFile();
-            schoolManager.Run();  
+            DataManager data = new DataManager().Load();
+            
+            SchoolManager schoolManager = new SchoolManager();
+            schoolManager.Run(data);  
         }
     }
 }

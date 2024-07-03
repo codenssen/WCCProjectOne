@@ -5,11 +5,11 @@ namespace WCCProjectOne
     public class FileManager
     {
 
-        static public bool SaveFile(SchoolManager app)
+        static public bool SaveFile(DataManager data)
         {
             try
             {
-                File.WriteAllText(@"app.json", JsonConvert.SerializeObject(app, Formatting.Indented));
+                File.WriteAllText(@"app.json", JsonConvert.SerializeObject(data, Formatting.Indented));
             }
             catch (Exception ex)
             {
@@ -21,23 +21,23 @@ namespace WCCProjectOne
             return true;
         }
 
-        static public SchoolManager LoadFile()
+        static public DataManager LoadFile()
         {
             string filePath = @"app.json";
             if (!File.Exists(filePath))
             {
-                return new SchoolManager();
+                return new DataManager();
             }
             try
             {
-                return JsonConvert.DeserializeObject<SchoolManager>(File.ReadAllText(filePath));
+                return JsonConvert.DeserializeObject<DataManager>(File.ReadAllText(filePath));
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erreur au chargement du fichier");
                 Console.WriteLine(ex.ToString());
                 Console.ReadKey(true);
-                return new SchoolManager();
+                return new DataManager();
             }
 
         }
