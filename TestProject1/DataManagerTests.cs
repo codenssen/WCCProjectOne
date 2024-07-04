@@ -1,49 +1,74 @@
-﻿using WCCProjectOne;
+﻿
+using WCCProjectOne;
 
-namespace WCCProjectOneTests
+namespace TestProject1
 {
-
     public class DataManagerTests
     {
         [Fact]
-        public void Constructor_InitializesLists()
+        public void GetOneStudentId_test()
         {
-            // Arrange & Act
-            var dataManager = new DataManager();
+            // Arrange
+            int index = 2;
+            var data = new DataManager();
+            data.AddStudent("Bob", "Boby", new DateTime(2023, 12, 01), 3);
+            data.AddStudent("Bob", "Boby", new DateTime(2023, 12, 01), 4);
+            data.AddStudent("Bob", "Boby", new DateTime(2023, 12, 01), 5);
+
+            // Act
+            int studentId = data.GetOneStudentId(index);
 
             // Assert
-            Assert.NotNull(dataManager.GetStudents());
-            Assert.NotNull(dataManager.GetCourses());
-            Assert.NotNull(dataManager.GetNotes());
-            Assert.Empty(dataManager.GetStudents());
-            Assert.Empty(dataManager.GetCourses());
-            Assert.Empty(dataManager.GetNotes());
+            Assert.Equal(4, studentId);
         }
 
         [Fact]
-        public void AddStudent_AddsStudentToList()
+        public void GetOneCourseId_test()
         {
             // Arrange
-            var dataManager = new DataManager();
-            var lastName = "Doe";
-            var firstName = "John";
-            var birthDate = "01/01/2000";
-            var id = 1;
+            int index = 3;
+            var data = new DataManager();
+            data.AddCourse("Cours1", 5);
+            data.AddCourse("Cours2", 8);
+            data.AddCourse("Cours3", 12);
 
             // Act
-            dataManager.AddStudent(lastName, firstName, birthDate, id);
-            var students = dataManager.GetStudents();
+            int courseId = data.GetOneCourseId(index);
 
             // Assert
-            Assert.Single(students);
-            Assert.Equal(lastName, students[0].LastName);
-            Assert.Equal(firstName, students[0].FirstName);
-            Assert.Equal(birthDate, students[0].BirthDate);
-            Assert.Equal(id, students[0].Id);
+            Assert.Equal(12, courseId);
         }
 
-        // Mock FileManager to test Save and Load methods
+        [Fact]
+        public void GetOneCourseName_test()
+        {
+            // Arrange
+            var data = new DataManager();
+            string courseName = "Cours1";
+            data.AddCourse(courseName, 10);
 
+            // Act
+            string resultName = data.GetOneCourseName(10);
+
+            // Assert
+            Assert.Equal(courseName, resultName);
+        }
+
+        [Fact]
+        public void DeleteCourse_test()
+        {
+            // Arrange
+            var data = new DataManager();
+            data.AddCourse("Cours 1", 0);
+
+            // Act
+            bool confirmDelete = data.DeleteCourse(0);
+
+            // Assert
+            Assert.True(confirmDelete);
+
+        }
 
     }
 }
+

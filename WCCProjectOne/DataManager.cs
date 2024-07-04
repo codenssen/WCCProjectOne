@@ -25,12 +25,10 @@ namespace WCCProjectOne
         {
             FileManager.SaveFile(this);
         }
-
         public DataManager Load()
         {
             return FileManager.LoadFile();
         }
-
         public List<Student> GetStudents()
         {
             return _students;
@@ -45,7 +43,6 @@ namespace WCCProjectOne
             int studentId = _students[index - 1].Id;
             return studentId;
         }
-
         public void PrintStudents()
         {
             int index = 1;
@@ -57,10 +54,13 @@ namespace WCCProjectOne
             }
             Console.WriteLine("========================");
         }
-
         public void AddStudent(string lastName, string firstName, DateTime formattedDate, int id)
         {
             _students.Add(new Student(lastName, firstName, formattedDate, id));
+        }
+        public void AddCourse(string name, int id)
+        {
+            _courses.Add(new Course(name, id));
         }
         public List<Course> GetCourses()
         {
@@ -94,7 +94,6 @@ namespace WCCProjectOne
             _notes.RemoveAll(note => note.CourseId == id);
             return true;
         }
-
         public List<Note> GetNotes()
         {
             return _notes;

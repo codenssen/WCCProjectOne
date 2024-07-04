@@ -228,11 +228,19 @@ namespace WCCProjectOne
             int indexStudent = UserInput();
             studentId = data.GetOneStudentId(indexStudent);
 
-            data.PrintCourses();
-            Console.WriteLine("Merci de choisir le cours :");
-            int indexCourse = UserInput();
-            courseId = data.GetOneCourseId(indexCourse);
-
+            if (data.GetCourses().Count > 0)
+            {
+                data.PrintCourses();
+                Console.WriteLine("Merci de choisir le cours :");
+                int indexCourse = UserInput();
+                courseId = data.GetOneCourseId(indexCourse);
+            }
+            else
+            {
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Pas de cours disponible, appuyez sur une touche pour revenir au menu principal");
+                Console.ReadKey(true);
+                return;
+            }
             while (true)
             {
                 Console.WriteLine("Merci de rentrer votre note (entre 0 et 20)");
@@ -308,9 +316,7 @@ namespace WCCProjectOne
         public void AddCourse(DataManager data)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(">> Création d'un nouveau cours <<");
-            Console.ResetColor();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Création d'un nouveau cours <<");
             Console.WriteLine();
 
             string name;
@@ -324,7 +330,8 @@ namespace WCCProjectOne
                 name = "Aucun nom de cours fourni.";
             }
             id = courses.Count == 0 ? 0 : courses.Max(c => c.Id) + 1;
-            courses.Add(new Course(name, id));
+            //courses.Add(new Course(name, id));
+            data.AddCourse(name, id);
             Log.Information($"Nouveau cours créé : {name} - {id}");
         }
 

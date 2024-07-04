@@ -1,17 +1,16 @@
-﻿using WCCProjectOne;
-
-namespace WCCProjectOneTests
+﻿
+namespace WCCProjectOne.Tests
 {
     public class StudentTests
     {
         [Fact]
-        public void Constructor_SetsPropertiesCorrectly()
+        public void Student_Initialization_ShouldSetPropertiesCorrectly()
         {
             // Arrange
-            var lastName = "Doe";
-            var firstName = "John";
-            var birthDate = "01/01/2000";
-            var id = 1;
+            string lastName = "Doe";
+            string firstName = "John";
+            DateTime birthDate = new DateTime(2000, 1, 1);
+            int id = 123;
 
             // Act
             var student = new Student(lastName, firstName, birthDate, id);
@@ -24,25 +23,25 @@ namespace WCCProjectOneTests
         }
 
         [Fact]
-        public void ListOne_PrintsCorrectly()
+        public void ListOne_ShouldOutputCorrectInformation()
         {
             // Arrange
-            var lastName = "Doe";
-            var firstName = "John";
-            var birthDate = "01/01/2000";
-            var id = 1;
+            string lastName = "Doe";
+            string firstName = "John";
+            DateTime birthDate = new DateTime(2000, 1, 1);
+            int id = 123;
             var student = new Student(lastName, firstName, birthDate, id);
-            var expectedOutput = $"ID : {id}{Environment.NewLine}Nom : {lastName}{Environment.NewLine}Prénom : {firstName}{Environment.NewLine}Date de naissance : 01/01/2000{Environment.NewLine}";
 
-            using var writer = new StringWriter();
-            Console.SetOut(writer);
+            // Redirect Console Output
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
 
             // Act
             student.ListOne();
-            var output = writer.ToString();
 
             // Assert
-            Assert.Equal(expectedOutput, output);
+            string expectedOutput = $"ID : {id}\r\nNom : {lastName}\r\nPrénom : {firstName}\r\nDate de naissance : {birthDate}\r\n";
+            Assert.Equal(expectedOutput, stringWriter.ToString());
         }
     }
 }
