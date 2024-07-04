@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection.Metadata.Ecma335;
 
@@ -16,6 +17,7 @@ namespace WCCProjectOne
             Console.WriteLine("Faites votre choix :");
             Console.WriteLine("1 - Gestion des élèves");
             Console.WriteLine("2 - Gestion des cours");
+            Console.WriteLine("3 - Gestion des promotions");
             Console.WriteLine("9 - Quitter l'application");
             userInput = UserInput();
             return userInput;
@@ -35,6 +37,22 @@ namespace WCCProjectOne
             userInput = UserInput();
             return userInput;
         }
+
+        public int Promotion()
+        {
+            int userInput;
+            Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Gestion des promotions <<");
+            Console.WriteLine();
+            Console.WriteLine("Faites votre choix :");
+            Console.WriteLine("1 - Afficher la liste des promotions");
+            Console.WriteLine("2 - Afficher une promotion existante");
+            Console.WriteLine("3 - Afficher la moyenne de note d'une promotion");
+            Console.WriteLine("0 - Revenir au menu principal");
+            userInput = UserInput();
+            return userInput;
+        }
+
         public void ListStudents(DataManager data)
         {
             Console.Clear();
@@ -70,6 +88,7 @@ namespace WCCProjectOne
             string firstName;
             DateTime birthdate;
             int id;
+            string promotion;
 
             while (true)
             {
@@ -102,12 +121,32 @@ namespace WCCProjectOne
                     if (DateTime.TryParseExact(birthdateInput, "dd-MM-yyyy", null, DateTimeStyles.None, out birthdate)) break;
                     else Console.WriteLine("Format de date incorrect. Veuillez réessayer.");
                 }
+                while (true)
+                {
+                    List<string> promotions = data.GetPromotions();
+                    Console.WriteLine("Entrez le numéro de la promotion à rajouter (Sinon entrer 0 pour rajouter une promotion)");
+                    Console.WriteLine("Liste des promotions disponibles :");
+                    this.PrintPromotion(data);
+                    int userInput = UserInput();
+                    if (userInput == 0)
+                    {
+                        Console.WriteLine("Entrer le nom de la promotion :");
+                        promotion = UserStringInput();
+                        break;
+                    }
+                    else if (userInput > 0 && userInput <= promotions.Count)
+                    {
+                        promotion = promotions[userInput - 1];
+                        break;
+                    }
+                    else Console.WriteLine("Format de promotion inconnect. Veuillez réessayer.");
+                }
 
                 // Générez un nouvel ID pour l'élève
                 id = students.Count == 0 ? 1 : students.Max(s => s.Id) + 1;
 
                 // Créez et ajoutez l'élève à la liste
-                data.AddStudent(lastName, firstName, birthdate, id);
+                data.AddStudent(lastName, firstName, birthdate, id, promotion);
 
                 ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, "Nouvel élève ajouté avec succès ! Appuyez sur une touche pour continuer");
                 Console.ReadKey(true);
@@ -365,6 +404,41 @@ namespace WCCProjectOne
                 return;
             }
         }
+        public void PrintPromotion(DataManager data)
+        {
+            Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Liste des promotions <<");
+            Console.WriteLine();
+            List<string> promotions = data.GetPromotions();
+            int index = 1;
+            foreach (string promotion in promotions)
+            {
+                Console.WriteLine($"{index} - {promotion}");
+                index++;
+            }
+            Console.WriteLine("\nAppuyez sur une touche pour continuer");
+            Console.ReadKey(true);
+        }
+
+        public void PrintStudentsByPromotion(DataManager data)
+        {
+            Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Liste des étudiants pour une promotion <<");
+            Console.WriteLine();
+
+            List<string> promotions = data.GetPromotions();
+
+            this.PrintPromotion(data);
+            Console.WriteLine("Entrer le numéro de la promotion à afficher");
+            int userInput = UserInput();
+            if (userInput > 0 && userInput <= promotions.Count)
+            {
+                
+            }
+            else Console.WriteLine("Format de promotion inconnect. Veuillez réessayer.");
+
+        }
+
         public int UserInput()
         {
             int userInput;

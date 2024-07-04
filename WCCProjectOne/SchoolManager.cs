@@ -92,6 +92,22 @@ namespace WCCProjectOne
                     }
 
                 }
+                else if (userInput == 3)
+                {
+                    userInput = menu.Promotion();
+                    if (userInput == 0)
+                    {
+                        //"0 - Revenir au menu principal"
+                        continue;
+                    }
+                    if (userInput == 1)
+                    {
+                        //"1 - Afficher la liste des promotions"
+                        menu.PrintPromotion(data);
+                        continue;
+                    }
+
+                }
             }
         }
     }

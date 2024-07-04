@@ -54,9 +54,9 @@ namespace WCCProjectOne
             }
             Console.WriteLine("========================");
         }
-        public void AddStudent(string lastName, string firstName, DateTime formattedDate, int id)
+        public void AddStudent(string lastName, string firstName, DateTime formattedDate, int id, string promotion)
         {
-            _students.Add(new Student(lastName, firstName, formattedDate, id));
+            _students.Add(new Student(lastName, firstName, formattedDate, id, promotion));
         }
         public void AddCourse(string name, int id)
         {
@@ -103,5 +103,9 @@ namespace WCCProjectOne
             _notes.Add(new Note(grade, appreciation, studentId, courseId));
         }
 
+        public List<string> GetPromotions()
+        {
+            return _students.Select(s => s.Promotion).Distinct().ToList();
+        }
     }
 }

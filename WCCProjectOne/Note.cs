@@ -18,10 +18,5 @@ namespace WCCProjectOne
             CourseId = courseId;
             
         }
-
-        public void PrintNote()
-        {
-            Console.WriteLine($"Note : {Grade} - Appreciation : {Appreciation} - Cours : {CourseId}");
-        }
     }
 }
