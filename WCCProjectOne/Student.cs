@@ -8,15 +8,16 @@ namespace WCCProjectOne
         public readonly DateTime BirthDate;
 
         public readonly int Id;
-        public readonly string LastName;
-        public readonly string FirstName;
+        private string _lastname;
+        private string _firstname;
 
-        //public string BirthDate { get { return _birthDate.ToString("dd/MM/yyyy"); } }
+        public string LastName { get { return _lastname.ToUpper(); } }
+        public string FirstName { get { return _firstname.ToUpper(); } }
 
         public Student(string lastName, string firstName, DateTime birthDate, int id)
         {
-            LastName = lastName;
-            FirstName = firstName;
+            _lastname = lastName.ToLower();
+            _firstname = firstName.ToLower();
             BirthDate = birthDate;
             Id = id;
         }

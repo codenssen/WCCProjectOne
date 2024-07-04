@@ -11,7 +11,7 @@ namespace WCCProjectOne
         {
             int userInput;
             Console.Clear();
-            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Blue, "\"/=/ Bienvenue dans votre application de gestion Eleves/Cours /=/");
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Blue, "/=/ Bienvenue dans votre application de gestion Eleves/Cours /=/");
             Console.WriteLine("");
             Console.WriteLine("Faites votre choix :");
             Console.WriteLine("1 - Gestion des élèves");
@@ -20,64 +20,6 @@ namespace WCCProjectOne
             userInput = UserInput();
             return userInput;
         }
-
-        public int UserInput()
-        {
-            int userInput;
-            try
-            {
-                userInput = Convert.ToInt32(Console.ReadLine());
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine("====================/!\\=====================");
-                Console.WriteLine("|  Erreur  ! Merci de rentrer un chiffre !  |");
-                Console.WriteLine("============================================");
-                Log.Warning(ex.Message);
-                Console.ReadKey(true);
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur ! {ex.Message}");
-                Console.WriteLine("Appuyez sur une touche pour continuer");
-                Console.ReadKey(true);
-                return 0;
-            }
-
-            return userInput;
-        }
-
-        public string UserStringInput()
-        {
-            string userStringInput;
-            try
-            {
-                userStringInput = Console.ReadLine()!;
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine("=======================/!\\========================");
-                Console.WriteLine("|  Erreur  ! Merci de rentrer un texte correct !  |");
-                Console.WriteLine("==================================================");
-                Log.Warning(ex.Message);
-                Console.ReadKey(true);
-                return "";
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur ! {ex.Message}");
-                Console.WriteLine("Appuyez sur une touche pour continuer");
-                Console.ReadKey(true);
-                return "";
-            }
-            if (string.IsNullOrWhiteSpace(userStringInput))
-            {
-                userStringInput = "";
-            }
-            return userStringInput;
-        }
-
         public int Student()
         {
             int userInput;
@@ -93,173 +35,33 @@ namespace WCCProjectOne
             userInput = UserInput();
             return userInput;
         }
-        public int Course()
-        {
-            int userInput;
-            Console.Clear();
-            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, "\">> Gestion des cours <<");
-            Console.WriteLine();
-            Console.WriteLine("Faites votre choix :");
-            Console.WriteLine("1 - Lister les cours existants");
-            Console.WriteLine("2 - Ajouter un nouveau cours au programme");
-            Console.WriteLine("3 - Supprimer un cours");
-            Console.WriteLine("0 - Revenir au menu principal");
-            userInput = UserInput();
-            return userInput;
-        }
         public void ListStudents(DataManager data)
         {
             Console.Clear();
 
             List<Student> students = data.GetStudents();
+
             ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Liste des elèves : <<");
             Console.WriteLine();
-
-            int index = 1;
-            foreach (Student student in students)
+            if (students.Count > 0)
             {
-                Console.WriteLine($"{index} - {student.LastName} - {student.FirstName}");
-                index++;
+
+
+                Console.WriteLine("{0,-4} {1,-15} {2, -15}", "ID", "Nom ", "Prenom");
+                int index = 1;
+                foreach (Student student in students)
+                {
+                    Console.WriteLine("{0,-4} {1,-15} {2, -15}", $"{index}", $"{student.LastName}", $"{student.FirstName}");
+                    index++;
+                }
+            }
+            else
+            {
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Aucun élève inscrit");
             }
             Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
             Log.Information("Consultation de la liste des élèves");
             Console.ReadKey(true);
-        }
-        public void listCourses(DataManager data)
-        {
-            Console.Clear();
-            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Liste des cours <<");
-            Console.WriteLine();
-
-            int index = 1;
-            List<Course> courses = data.GetCourses();
-            foreach (Course course in courses)
-            {
-                Console.WriteLine($"{index} - {course.Name}");
-                index++;
-            }
-            Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
-            Console.ReadKey(true);
-        }
-
-        public void PrintStudent(DataManager data)
-        {
-            List<Student> students = data.GetStudents();
-
-            Console.Clear();
-            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Affichage d'un éléve (détails) <<");
-
-            Console.WriteLine();
-            Console.WriteLine("Voici la liste des élèves :");
-
-            data.PrintStudents();
-            Console.WriteLine();
-            Console.WriteLine("Choisir l'élève à afficher en tapant son identifiant");
-            Console.WriteLine("Choix :");
-            int indexStudent = UserInput();
-            int studentId = data.GetOneStudentId(indexStudent);
-            Student student = data.GetStudent(studentId);
-
-            List<Note> notes = data.GetNotes().Where(note => note.StudentId == studentId).OrderBy(note => note.StudentId).ToList();
-
-            // Calcul de la moyenne des notes
-            double average;
-            double sum = 0;
-            foreach (Note note in notes)
-            {
-                sum += note.Grade;
-            }
-            average = sum / notes.Count;
-            average = Math.Round(average, 1);
-
-            Console.WriteLine("==========================================");
-            Console.WriteLine("Informations sur l'élève : ");
-            Console.WriteLine();
-            Console.WriteLine("{0,-20} {1, -10}", "Nom ", $": {student.LastName}");
-            Console.WriteLine("{0,-20} {1, -10}", "Prénom ", $": {student.FirstName}");
-            Console.WriteLine("{0,-20} {1, -10}", "Date de naissance ", $": {student.BirthDate.ToString("dd-MM-yyyy")}");
-
-
-            if (notes.Count > 0)
-            {
-                Console.WriteLine();
-                Console.WriteLine(" Résultats scolaires :");
-                Console.WriteLine("");
-                foreach (Note note in notes)
-                {
-                    Console.WriteLine($"    Cours : {data.GetOneCourseName(note.CourseId)}");
-                    Console.WriteLine($"        Note : {note.Grade} / 20");
-                    if (note.Appreciation != "")
-                    {
-                        Console.WriteLine($"        Appréciation : {note.Appreciation}");
-                    }
-                    Console.WriteLine();
-
-                }
-                Console.WriteLine();
-                Console.WriteLine($"    Moyenne : {average} / 20");
-            }
-            else
-            {
-                Console.WriteLine();
-                Console.WriteLine("Pas de notes enregistrées pour cet éléve");
-            }
-            Console.WriteLine("==========================================");
-            Console.WriteLine("Taper une touche pour revenir au menu principal");
-            Log.Information($"Consultation des détails de l'élève {student.LastName} - {student.FirstName}");
-            Console.ReadKey(true);
-
-        }
-
-        public void AddGrade(DataManager data)
-        {
-            Console.Clear();
-            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Ajout d'une note à un éléve <<");
-            Console.WriteLine();
-
-            List<Note> notes = data.GetNotes();
-            double grade;
-            string appreciation;
-            int studentId;
-            int courseId;
-
-            data.PrintStudents();
-            Console.WriteLine("Merci de choisir un élève :");
-            int indexStudent = UserInput();
-            studentId = data.GetOneStudentId(indexStudent);
-
-            if (data.GetCourses().Count > 0)
-            {
-                data.PrintCourses();
-                Console.WriteLine("Merci de choisir le cours :");
-                int indexCourse = UserInput();
-                courseId = data.GetOneCourseId(indexCourse);
-            }
-            else
-            {
-                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Pas de cours disponible, appuyez sur une touche pour revenir au menu principal");
-                Console.ReadKey(true);
-                return;
-            }
-            while (true)
-            {
-                Console.WriteLine("Merci de rentrer votre note (entre 0 et 20)");
-                grade = UserInput();
-                if (grade >= 0 && grade <= 20) break;
-                else Console.WriteLine("Merci de choisir une note conforme");
-            }
-
-            Console.WriteLine("Merci de rentrer votre appréciation (ou laisser vide)");
-            appreciation = UserStringInput();
-            if (string.IsNullOrWhiteSpace(appreciation))
-            {
-                appreciation = "Aucune appréciation fournie.";
-            }
-            data.AddNote(grade, appreciation, studentId, courseId);
-            Log.Information($"Nouvelle note créée : {grade} - {appreciation} - {studentId} - {courseId}");
-            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, "Note créée ! Appuyez sur une touche pour continuer");
-            Console.ReadKey(true);
-
         }
         public void AddStudent(DataManager data)
         {
@@ -313,15 +115,197 @@ namespace WCCProjectOne
                 break;
             }
         }
+        public void PrintStudent(DataManager data)
+        {
+            List<Student> students = data.GetStudents();
+
+            Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Affichage d'un éléve (détails) <<");
+
+            if (students.Count > 0)
+            {
+
+                Console.WriteLine();
+                Console.WriteLine("Voici la liste des élèves :");
+
+                data.PrintStudents();
+                Console.WriteLine();
+                Console.WriteLine("Choisir l'élève à afficher en tapant son identifiant");
+                Console.WriteLine("Choix :");
+                int indexStudent = UserInput();
+                int studentId = data.GetOneStudentId(indexStudent);
+                Student student = data.GetStudent(studentId);
+
+                List<Note> notes = data.GetNotes().Where(note => note.StudentId == studentId).OrderBy(note => note.StudentId).ToList();
+
+                // Calcul de la moyenne des notes
+                double average;
+                double sum = 0;
+                foreach (Note note in notes)
+                {
+                    sum += note.Grade;
+                }
+                average = sum / notes.Count;
+                average = Math.Round(average, 1);
+
+                Console.WriteLine("==========================================");
+                Console.WriteLine("Informations sur l'élève : ");
+                Console.WriteLine();
+                Console.WriteLine("{0,-20} {1, -10}", "Nom ", $": {student.LastName}");
+                Console.WriteLine("{0,-20} {1, -10}", "Prénom ", $": {student.FirstName}");
+                Console.WriteLine("{0,-20} {1, -10}", "Date de naissance ", $": {student.BirthDate.ToString("dd-MM-yyyy")}");
+                Log.Information($"Consultation des détails de l'élève {student.LastName} - {student.FirstName}");
+
+
+                if (notes.Count > 0)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(" Résultats scolaires :");
+                    Console.WriteLine("");
+                    foreach (Note note in notes)
+                    {
+                        Console.WriteLine($"    Cours : {data.GetOneCourseName(note.CourseId)}");
+                        Console.WriteLine($"        Note : {note.Grade} / 20");
+                        if (note.Appreciation != "")
+                        {
+                            Console.WriteLine($"        Appréciation : {note.Appreciation}");
+                        }
+                        Console.WriteLine();
+
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine($"    Moyenne : {average} / 20");
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Pas de notes enregistrées pour cet éléve");
+                }
+                Console.WriteLine("==========================================");
+            }
+            else
+            {
+                Console.WriteLine();
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Aucun élève inscrit");
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("Taper une touche pour revenir au menu principal");
+            Console.ReadKey(true);
+
+        }
+        public void AddGrade(DataManager data)
+        {
+            Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Ajout d'une note à un éléve <<");
+            Console.WriteLine();
+
+            List<Note> notes = data.GetNotes();
+            double grade;
+            string appreciation;
+            int studentId;
+            int courseId;
+
+            if (data.GetStudents().Count > 0)
+            {
+
+                data.PrintStudents();
+                Console.WriteLine("Merci de choisir un élève :");
+                int indexStudent = UserInput();
+                studentId = data.GetOneStudentId(indexStudent);
+
+            }
+            else
+            {
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Pas d'élève inscrit, appuyez sur une touche pour revenir au menu principal");
+                Console.ReadKey(true);
+                return;
+            }
+
+            if (data.GetCourses().Count > 0)
+            {
+                data.PrintCourses();
+                Console.WriteLine("Merci de choisir le cours :");
+                int indexCourse = UserInput();
+                courseId = data.GetOneCourseId(indexCourse);
+            }
+            else
+            {
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Pas de cours disponible, appuyez sur une touche pour revenir au menu principal");
+                Console.ReadKey(true);
+                return;
+            }
+            while (true)
+            {
+                Console.WriteLine("Merci de rentrer votre note (entre 0 et 20)");
+                grade = UserInput();
+                if (grade >= 0 && grade <= 20) break;
+                else Console.WriteLine("Merci de choisir une note conforme");
+            }
+
+            Console.WriteLine("Merci de rentrer votre appréciation (ou laisser vide)");
+            appreciation = UserStringInput();
+            if (string.IsNullOrWhiteSpace(appreciation))
+            {
+                appreciation = "Aucune appréciation fournie.";
+            }
+            data.AddNote(grade, appreciation, studentId, courseId);
+            Log.Information($"Nouvelle note créée : {grade} - {appreciation} - {studentId} - {courseId}");
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, "Note créée ! Appuyez sur une touche pour continuer");
+            Console.ReadKey(true);
+
+        }
+        public int Course()
+        {
+            int userInput;
+            Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, "\">> Gestion des cours <<");
+            Console.WriteLine();
+            Console.WriteLine("Faites votre choix :");
+            Console.WriteLine("1 - Lister les cours existants");
+            Console.WriteLine("2 - Ajouter un nouveau cours au programme");
+            Console.WriteLine("3 - Supprimer un cours");
+            Console.WriteLine("0 - Revenir au menu principal");
+            userInput = UserInput();
+            return userInput;
+        }
+        public void listCourses(DataManager data)
+        {
+            Console.Clear();
+            ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Liste des cours <<");
+            Console.WriteLine();
+
+            List<Course> courses = data.GetCourses();
+            if (courses.Count > 0)
+            {
+
+                int index = 1;
+                foreach (Course course in courses)
+                {
+                    Console.WriteLine($"{index} - {course.Name}");
+                    index++;
+                }
+                Console.WriteLine("\nAppuyez sur une touche pour revenir au menu principal");
+                Console.ReadKey(true);
+            }
+            else
+            {
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Pas de cours disponible, appuyez sur une touche pour revenir au menu principal");
+                Console.ReadKey();
+                return;
+            }
+
+        }
         public void AddCourse(DataManager data)
         {
             Console.Clear();
             ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Green, ">> Création d'un nouveau cours <<");
             Console.WriteLine();
 
+            List<Course> courses = data.GetCourses();
+
             string name;
             int id;
-            List<Course> courses = data.GetCourses();
 
             Console.WriteLine("Saisir le nom du cours :");
             name = UserStringInput();
@@ -334,7 +318,6 @@ namespace WCCProjectOne
             data.AddCourse(name, id);
             Log.Information($"Nouveau cours créé : {name} - {id}");
         }
-
         public void DeleteCourse(DataManager data)
         {
             Console.Clear();
@@ -343,34 +326,99 @@ namespace WCCProjectOne
 
             int userInput;
             List<Course> courses = data.GetCourses();
-            Console.WriteLine("Veuillez rentrer l'ID du cours à supprimer :");
-            int index = 1;
-            foreach (Course course in courses)
+
+            if (courses.Count > 0)
             {
-                Console.WriteLine($"{index} - {course.Name}");
-                index++;
+                Console.WriteLine("Veuillez rentrer l'ID du cours à supprimer :");
+                int index = 1;
+                foreach (Course course in courses)
+                {
+                    Console.WriteLine($"{index} - {course.Name}");
+                    index++;
+                }
+                Console.WriteLine();
+                Console.WriteLine("Choix (0 pour retour au menu) :");
+                userInput = UserInput();
+                if (userInput != 0)
+                {
+                    int courseId = data.GetOneCourseId(userInput);
+                    ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Souhaitez-vous vraiment supprimer ce cours ? (O/N) :");
+                    string userConfirm = UserStringInput();
+                    if (userConfirm == "o" || userConfirm == "O")
+                    {
+                        bool confirm = data.DeleteCourse(courseId);
+                        ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, confirm ? "Suppression effectuée" : "Erreur de suppression");
+                        Console.ReadKey(true);
+                        Log.Information($"Cours supprimé : {courseId}");
+                    }
+                    else
+                    {
+                        ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Annulé ! Appuyez sur une touche pour continuer");
+                        Console.ReadKey(true);
+                    }
+                }
             }
-            Console.WriteLine();
-            Console.WriteLine("Choix (0 pour retour au menu) :");
-            userInput = UserInput();
-            if (userInput != 0)
+            else
             {
-                int courseId = data.GetOneCourseId(userInput);
-                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Souhaitez-vous vraiment supprimer ce cours ? (O/N) :");
-                string userConfirm = UserStringInput();
-                if (userConfirm == "o" || userConfirm == "O")
-                {
-                    bool confirm = data.DeleteCourse(courseId);
-                    ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, confirm ? "Suppression effectuée" : "Erreur de suppression");
-                    Console.ReadKey(true);
-                    Log.Information($"Cours supprimé : {courseId}");
-                }
-                else
-                {
-                    ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Annulé ! Appuyez sur une touche pour continuer");
-                    Console.ReadKey(true);
-                }
+                ConsoleDisplay.DisplayColor(ConsoleDisplay.Color.Red, "Pas de cours disponible, appuyez sur une touche pour revenir au menu principal");
+                Console.ReadKey(true);
+                return;
             }
+        }
+        public int UserInput()
+        {
+            int userInput;
+            try
+            {
+                userInput = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("====================/!\\=====================");
+                Console.WriteLine("|  Erreur  ! Merci de rentrer un chiffre !  |");
+                Console.WriteLine("============================================");
+                Log.Warning(ex.Message);
+                Console.ReadKey(true);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur ! {ex.Message}");
+                Console.WriteLine("Appuyez sur une touche pour continuer");
+                Console.ReadKey(true);
+                return 0;
+            }
+
+            return userInput;
+        }
+        public string UserStringInput()
+        {
+            string userStringInput;
+            try
+            {
+                userStringInput = Console.ReadLine()!;
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("=======================/!\\========================");
+                Console.WriteLine("|  Erreur  ! Merci de rentrer un texte correct !  |");
+                Console.WriteLine("==================================================");
+                Log.Warning(ex.Message);
+                Console.ReadKey(true);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur ! {ex.Message}");
+                Console.WriteLine("Appuyez sur une touche pour continuer");
+                Console.ReadKey(true);
+                return "";
+            }
+            if (string.IsNullOrWhiteSpace(userStringInput))
+            {
+                userStringInput = "";
+            }
+            return userStringInput;
         }
     }
 }
